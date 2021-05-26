@@ -1,12 +1,13 @@
 import { Dispatch, memo, SetStateAction, useEffect, useState } from 'react'
-import DG from '2gis-maps'
+import { load } from '@2gis/mapgl'
+import { Map as _Map } from '@2gis/mapgl/types'
 import { createContext } from 'react'
 import { useContext } from 'react'
 
-export const MapContext = createContext<[any, Dispatch<SetStateAction<any>>]>(null)
+export const MapContext = createContext<[_Map, Dispatch<SetStateAction<_Map>>]>(null)
 
 export const MapProvider: React.FC = ({ children }) => {
-  const [map, setMap] = useState<any>(null)
+  const [map, setMap] = useState<_Map>(null)
 
   return <MapContext.Provider value={[map, setMap]}>{children}</MapContext.Provider>
 }
@@ -22,23 +23,23 @@ export const Map = () => {
   const [_, setMapInstance] = useContext(MapContext)
 
   useEffect(() => {
-    let map: any
+    let map: _Map
+    load().then((mapglAPI) => {
+      map = new mapglAPI.Map('map-container', {
+        center: [71.43137692563238, 51.15505905916328],
+        zoom: 12,
+        key: '00848196-c4f9-4345-ad34-bc2cb09c9334',
+        zoomControl: false,
+        lang: 'ru-RU',
+      })
 
-    map = DG.map('map-container', {
-      center: [51.15, 71.42],
-      zoom: 13,
-      geoclicker: true,
-      inertia: true,
-      keyboard: true,
+      new mapglAPI.ZoomControl(map, { position: 'bottomRight' })
+      new mapglAPI.TrafficControl(map, { position: 'bottomRight' })
+      new mapglAPI.Control(map, '<button>asd</button>', {
+        position: 'bottomRight',
+      })
+      setMapInstance(map)
     })
-
-    DG.control.zoom({ position: 'bottomright' })
-    DG.control.location({ position: 'bottomright' }).addTo(map)
-    DG.control.scale().addTo(map)
-    DG.control.ruler({ position: 'bottomleft' }).addTo(map)
-    DG.control.traffic().addTo(map)
-
-    setMapInstance(map)
 
     return () => map && map.destroy()
   }, [setMapInstance])
@@ -49,3 +50,5 @@ export const Map = () => {
     </div>
   )
 }
+
+export const useMap = () => useContext(MapContext)

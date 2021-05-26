@@ -1,6 +1,6 @@
-import { useContext, useEffect } from 'react'
+import { useEffect } from 'react'
 import { createGlobalStyle } from 'styled-components'
-import { Map, MapContext } from './shared/map'
+import { Map, useMap } from './shared/map'
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -12,15 +12,14 @@ const GlobalStyle = createGlobalStyle`
 `
 
 function App() {
-  const [map] = useContext(MapContext)
-
+  const [map] = useMap()
   useEffect(() => {
-    if (map)
+    if (map) {
       map.on('click', (e) => {
-        console.log(e.latlng)
+        console.log(e.lngLat)
       })
+    }
   }, [map])
-
   return (
     <>
       <GlobalStyle />
