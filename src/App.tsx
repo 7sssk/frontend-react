@@ -1,4 +1,6 @@
-import styled, { createGlobalStyle } from 'styled-components'
+import { useContext, useEffect } from 'react'
+import { createGlobalStyle } from 'styled-components'
+import { Map, MapContext } from './shared/map'
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -10,11 +12,20 @@ const GlobalStyle = createGlobalStyle`
 `
 
 function App() {
+  const [map] = useContext(MapContext)
+
+  useEffect(() => {
+    if (map)
+      map.on('click', (e) => {
+        console.log(e.latlng)
+      })
+  }, [map])
+
   return (
     <>
       <GlobalStyle />
 
-      <h1>hellow</h1>
+      <Map />
     </>
   )
 }

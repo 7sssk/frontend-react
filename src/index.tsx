@@ -6,11 +6,14 @@ import { Provider } from 'react-redux'
 import * as serviceWorker from './serviceWorker'
 import { ThemeProvider } from 'styled-components'
 import { theme } from './theme'
+import { MapProvider } from './shared/map'
 
 ReactDOM.render(
   <Provider store={store}>
     <ThemeProvider theme={theme}>
-      <App />
+      <MapProvider>
+        <App />
+      </MapProvider>
     </ThemeProvider>
   </Provider>,
   document.getElementById('root')
