@@ -1,13 +1,9 @@
 import * as express from 'express';
-import { Message } from '@to-masjid/api-interfaces';
+import { join } from 'path';
 
 const app = express();
 
-const greeting: Message = { message: 'Welcome to api!' };
-
-app.get('/api', (req, res) => {
-  res.send(greeting);
-});
+app.use(express.static(join(__dirname, '..', 'react')));
 
 const port = process.env.port || 3333;
 const server = app.listen(port, () => {
