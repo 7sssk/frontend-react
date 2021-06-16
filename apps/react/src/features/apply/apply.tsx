@@ -1,34 +1,87 @@
-import { Role, SetApplyAction } from '../../redux/apply'
-import { SpeedDials } from '../../shared/components/fab'
-import { useAppDispatch, useAppSelector } from '../../shared/hooks'
-import { Dialog } from '@material-ui/core'
-import { Map } from '../map'
-import styled from 'styled-components'
-import { Header } from './components/header'
+import { setSelectedRoleAction } from 'src/redux';
+import { SpeedDials, SpeedDialsAction } from 'src/shared/components/fab';
+import { useAppDispatch, useAppSelector } from 'src/shared/hooks';
+import {
+  Dialog,
+  DialogContent,
+  useMediaQuery,
+  useTheme,
+} from '@material-ui/core';
+import styled from 'styled-components';
+import { useEffect, useMemo, useState } from 'react';
+import { RoleIcon } from 'src/shared/components/role-icon';
+import { Solat } from 'src/models/solat';
+import { axiosInstance } from 'src/shared/axios-instance';
+import { useRequest } from 'use-promise-request';
+import { Form } from './components/form';
+import { Application } from 'src/models/applications';
+import { TMSDialogTitle } from 'src/shared/components/dialog-title';
 
 export const Apply = () => {
-  const dispatch = useAppDispatch()
-  const { role } = useAppSelector((s) => s.applyReducer)
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
-  const onSelectRole = (role: Role) => {
-    dispatch(SetApplyAction(role))
-  }
+  const dispatch = useAppDispatch();
+  const { selectedRole, roles } = useAppSelector((s) => s.applyReducer);
+
+  const { request, loading } = useRequest();
+  const [solats, setSolats] = useState<Solat[]>([]);
+
+  const actions = useMemo<SpeedDialsAction[]>(() => {
+    return roles.map(({ id, name }) => ({
+      icon: <RoleIcon roleId={id} />,
+      name,
+      roleId: id,
+    }));
+  }, [roles]);
+
+  useEffect(() => {
+    request(getSolats()).then(setSolats);
+  }, [request]);
+
+  const onSelectRole = (roleId: number) => {
+    dispatch(setSelectedRoleAction(roleId));
+  };
+
+  const onSubmit = (v: Application) => {
+    console.log('🚀 ~ file: apply.tsx ~ line 41 ~ onSubmit ~ v', v);
+  };
 
   return (
     <>
-      <SpeedDials selectRole={onSelectRole} />
-      <Dialog open={!!role} onClose={onSelectRole.bind(null, null)} fullScreen>
-        <Header role={role} onSelectRole={onSelectRole} />
+      <SpeedDials actions={actions} onSelectRole={onSelectRole} />
+      {selectedRole && (
+        <Dialog
+          open={!!selectedRole}
+          onClose={onSelectRole.bind(null, null)}
+          fullWidth
+          fullScreen={!matches}
+        >
+          <TMSDialogTitle onClose={onSelectRole.bind(null, null)}>
+            <RoleIcon roleId={selectedRole.id} />
+          </TMSDialogTitle>
 
-        {/* <StyledMap>
-          <Map container="role-map" />
-        </StyledMap> */}
-      </Dialog>
+          <DialogContent>
+            {loading ? (
+              'loading solats...'
+            ) : (
+              <Form
+                solats={solats}
+                roleId={selectedRole.id}
+                onSubmit={onSubmit}
+              />
+            )}
+          </DialogContent>
+        </Dialog>
+      )}
     </>
-  )
-}
+  );
+};
 
 const StyledMap = styled.div`
   height: 500px;
   width: 100%;
-`
+`;
+
+const getSolats = (): Promise<Solat[]> =>
+  axiosInstance.get(`/dict/solats`).then((v) => v.data);

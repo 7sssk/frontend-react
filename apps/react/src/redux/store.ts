@@ -1,20 +1,18 @@
-import { createStore, Action, applyMiddleware, combineReducers } from 'redux'
+import { createStore, Action, applyMiddleware, combineReducers } from 'redux';
 
-import thunk, { ThunkAction } from 'redux-thunk'
-import logger from 'redux-logger'
-import { applyReducer } from './apply'
+import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk';
+import logger from 'redux-logger';
+import { applyReducer } from './apply';
+import { appMapReducer } from './map.redux';
 
 const rootReducer = combineReducers({
+  appMapReducer,
   applyReducer,
-})
+});
 
-export const store = createStore(rootReducer, applyMiddleware(thunk, logger))
+export const store = createStore(rootReducer, applyMiddleware(thunk, logger));
 
-export type AppDispatch = typeof store.dispatch
-export type RootState = ReturnType<typeof store.getState>
-export type AppThunk<ReturnType = void> = ThunkAction<
-  ReturnType,
-  RootState,
-  unknown,
-  Action<string>
->
+export type RootState = ReturnType<typeof rootReducer>;
+
+export type AppThunk<T> = ThunkAction<T, RootState, unknown, Action<string>>;
+export type AppDispatch = ThunkDispatch<RootState, undefined, Action<string>>;

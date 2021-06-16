@@ -1,3 +1,5 @@
-import axios from 'axios'
+import axios from 'axios';
 
-export const instance = axios.create();
+export const axiosInstance = axios.create({
+  baseURL: 'https://www.icatalog.kz/api',
+});
