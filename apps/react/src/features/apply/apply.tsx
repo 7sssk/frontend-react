@@ -1,8 +1,9 @@
-import { setSelectedRoleAction } from 'src/redux';
+import { fetchAddApplication, setSelectedRoleAction } from 'src/redux';
 import { SpeedDials, SpeedDialsAction } from 'src/shared/components/fab';
 import { useAppDispatch, useAppSelector } from 'src/shared/hooks';
 import {
   Dialog,
+  DialogActions,
   DialogContent,
   useMediaQuery,
   useTheme,
@@ -14,7 +15,7 @@ import { Solat } from 'src/models/solat';
 import { axiosInstance } from 'src/shared/axios-instance';
 import { useRequest } from 'use-promise-request';
 import { Form } from './components/form';
-import { Application } from 'src/models/applications';
+import { ApplicationRequest } from 'src/models/applications';
 import { TMSDialogTitle } from 'src/shared/components/dialog-title';
 
 export const Apply = () => {
@@ -22,7 +23,7 @@ export const Apply = () => {
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
   const dispatch = useAppDispatch();
-  const { selectedRole, roles } = useAppSelector((s) => s.applyReducer);
+  const { selectedRole, roles } = useAppSelector((s) => s.roleReducer);
 
   const { request, loading } = useRequest();
   const [solats, setSolats] = useState<Solat[]>([]);
@@ -43,7 +44,8 @@ export const Apply = () => {
     dispatch(setSelectedRoleAction(roleId));
   };
 
-  const onSubmit = (v: Application) => {
+  const onSubmit = (v: ApplicationRequest) => {
+    dispatch(fetchAddApplication(v));
     console.log('🚀 ~ file: apply.tsx ~ line 41 ~ onSubmit ~ v', v);
   };
 
@@ -72,6 +74,7 @@ export const Apply = () => {
               />
             )}
           </DialogContent>
+          <DialogActions></DialogActions>
         </Dialog>
       )}
     </>

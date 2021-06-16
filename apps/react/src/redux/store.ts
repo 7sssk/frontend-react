@@ -2,12 +2,12 @@ import { createStore, Action, applyMiddleware, combineReducers } from 'redux';
 
 import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import logger from 'redux-logger';
-import { applyReducer } from './apply';
+import { roleReducer } from './roles';
 import { appMapReducer } from './map.redux';
 
 const rootReducer = combineReducers({
   appMapReducer,
-  applyReducer,
+  roleReducer,
 });
 
 export const store = createStore(rootReducer, applyMiddleware(thunk, logger));

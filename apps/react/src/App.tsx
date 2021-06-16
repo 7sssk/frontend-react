@@ -4,7 +4,7 @@ import { Apply } from './features/apply/apply';
 import { Spinner } from './shared/styled/spinner';
 import { AppMap } from './features/map/app-map';
 import { useEffect } from 'react';
-import { useAppDispatch } from './shared/hooks';
+import { useAppDispatch, useAppSelector } from './shared/hooks';
 import { fetchApplications, fetchRolesThunk } from './redux';
 import { useRequest } from 'use-promise-request';
 
@@ -18,13 +18,12 @@ const GlobalStyle = createGlobalStyle`
 `;
 function App() {
   const dispatch = useAppDispatch();
-  const { loading, request } = useRequest();
+  const { loading } = useAppSelector((s) => s.appMapReducer);
 
   useEffect(() => {
-    request(
-      Promise.all([dispatch(fetchRolesThunk()), dispatch(fetchApplications())])
-    );
-  }, [dispatch, request]);
+    dispatch(fetchRolesThunk());
+    dispatch(fetchApplications());
+  }, [dispatch]);
 
   return (
     <>

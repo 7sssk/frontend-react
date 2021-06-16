@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import { FC, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { Application } from 'src/models/applications';
+import { ApplicationRequest } from 'src/models/applications';
 import { LatLng } from 'src/models/map.model';
 import { Solat } from 'src/models/solat';
 import styled from 'styled-components';
@@ -19,17 +19,19 @@ import { Map } from './map';
 type Props = {
   solats: Solat[];
   roleId: number;
-  onSubmit: (v: Application) => void;
+  onSubmit: (v: ApplicationRequest) => void;
 };
 
 export const Form: FC<Props> = ({ solats, roleId, onSubmit }) => {
-  const { handleSubmit, control } = useForm<Application>({
+  const { handleSubmit, control, getValues } = useForm<ApplicationRequest>({
     defaultValues: {
+      location: [],
       comment: '',
       return: true,
       solat_id: 1,
       telegram: '',
       role_id: roleId,
+      huruj_date: new Date().toJSON(),
     },
   });
 
@@ -47,7 +49,7 @@ export const Form: FC<Props> = ({ solats, roleId, onSubmit }) => {
 
       <StyledForm
         onSubmit={handleSubmit((data) => {
-          onSubmit({ ...data, latlng });
+          onSubmit({ ...data, location: [latlng.lng, latlng.lat] });
         })}
       >
         <FormControl variant="outlined" required>
@@ -68,6 +70,24 @@ export const Form: FC<Props> = ({ solats, roleId, onSubmit }) => {
             }}
           />
         </FormControl>
+
+        <Controller
+          name="huruj_date"
+          control={control}
+          render={({ field }) => {
+            return (
+              <TextField
+                {...field}
+                id="date"
+                label="Date"
+                type="date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            );
+          }}
+        />
 
         <Controller
           name="return"

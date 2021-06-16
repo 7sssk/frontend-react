@@ -35,7 +35,7 @@ const initState: State = {
   roles: [],
 };
 
-export const applyReducer = (
+export const roleReducer = (
   state = initState,
   action: SelectedRoleSetType | RolesSetType
 ): State => {
