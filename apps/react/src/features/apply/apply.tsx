@@ -46,7 +46,6 @@ export const Apply = () => {
 
   const onSubmit = (v: ApplicationRequest) => {
     dispatch(fetchAddApplication(v));
-    console.log('🚀 ~ file: apply.tsx ~ line 41 ~ onSubmit ~ v', v);
   };
 
   return (

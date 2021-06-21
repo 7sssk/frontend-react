@@ -14,7 +14,7 @@ import { ApplicationRequest } from 'src/models/applications';
 import { LatLng } from 'src/models/map.model';
 import { Solat } from 'src/models/solat';
 import styled from 'styled-components';
-import { Map } from './map';
+import { ApplicationMap } from './map';
 
 type Props = {
   solats: Solat[];
@@ -44,7 +44,7 @@ export const Form: FC<Props> = ({ solats, roleId, onSubmit }) => {
       </Typography>
 
       <div style={{ width: '100%', height: 300 }}>
-        <Map onClick={setLatlng} />
+        <ApplicationMap onClick={setLatlng} />
       </div>
 
       <StyledForm

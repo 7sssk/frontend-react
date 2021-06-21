@@ -1,60 +1,75 @@
-import { FC, memo, useCallback, useEffect, useState } from 'react';
-import DG from '2gis-maps';
+import { FC, useEffect, useRef, useState } from 'react';
+import {
+  Map,
+  GeolocateControl,
+  FullscreenControl,
+  NavigationControl,
+  Marker,
+} from 'mapbox-gl';
 import { LatLng } from 'src/models/map.model';
 
-const MapContainer: React.FC = () => {
-  return (
-    <div id="application-map" style={{ width: '100%', height: '100%' }}></div>
-  );
-};
-
-const MapWrapper = memo(MapContainer, () => true);
-
 type Props = {
-  onClick: (v: LatLng) => void;
+  onClick: (arg: LatLng) => void;
 };
 
-export const Map: FC<Props> = ({ onClick }) => {
-  const [map, setMap] = useState<any>(null);
-
-  const _onClick = useCallback(onClick, [onClick]);
+export const ApplicationMap: FC<Props> = ({ onClick }) => {
+  const mapContainer = useRef<HTMLDivElement>(null);
+  const [map, setMap] = useState(null);
 
   useEffect(() => {
-    const map = DG.map('application-map', {
-      center: [51.15, 71.42],
-      zoom: 13,
-      zoomControl: false,
-    });
+    if (map) {
+      return;
+    }
 
-    map
-      .locate({ setView: true, enableHighAccuracy: true })
-      .on('locationfound', (e) => e)
-      .on('locationerror', function (e) {
-        DG.popup()
-          .setLatLng(map.getCenter())
-          .setContent('Доступ к определению местоположения отключён')
-          .openOn(map);
+    navigator.geolocation.getCurrentPosition(({ coords }) => {
+      const { longitude, latitude } = coords;
+      const _map = initMap(mapContainer.current, { longitude, latitude });
+
+      _map.addControl(
+        new GeolocateControl({
+          positionOptions: {
+            enableHighAccuracy: true,
+          },
+          fitBoundsOptions: {
+            animate: false,
+            zoom: 15,
+          },
+          showAccuracyCircle: false,
+        })
+      );
+
+      _map.addControl(new FullscreenControl());
+      _map.addControl(new NavigationControl());
+
+      let marker: Marker;
+
+      _map.on('click', ({ lngLat }) => {
+        onClick(lngLat);
+        if (marker) {
+          marker.remove();
+        }
+        marker = new Marker().setLngLat(lngLat).addTo(_map);
       });
 
-    DG.control.location({ position: 'topright' }).addTo(map);
-    DG.control.zoom({ position: 'bottomright' }).addTo(map);
+      setMap(map);
 
-    let marker: any;
-
-    map.on('click', ({ latlng: { lat, lng } }) => {
-      if (marker) {
-        marker.remove();
-      }
-      marker = DG.marker([lat, lng]).addTo(map);
-      _onClick({ lat, lng });
+      return () => {
+        _map.remove();
+      };
     });
+  }, []);
 
-    setMap(map);
+  return <div ref={mapContainer} style={{ height: '100%', width: '100%' }} />;
+};
 
-    return () => {
-      map.remove();
-    };
-  }, [setMap, _onClick]);
-
-  return <MapWrapper />;
+const initMap = (mapContainer: HTMLDivElement, { longitude, latitude }) => {
+  return new Map({
+    container: mapContainer,
+    style: 'mapbox://styles/mapbox/streets-v11',
+    center: [longitude, latitude],
+    zoom: 15,
+    attributionControl: true,
+    accessToken:
+      'pk.eyJ1Ijoia293cGVuZGkiLCJhIjoiY2txNWZzeTdvMTM5ajJwbzB2ZXdzYjJ0dSJ9.5OgNiQgqr3qBkVDPZl2yKA',
+  });
 };

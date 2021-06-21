@@ -1,23 +1,24 @@
 import { Action } from 'redux';
 import { Application, ApplicationRequest } from 'src/models/applications';
-import DG from '2gis-maps';
 import { RoleIcon } from 'src/shared/components/role-icon';
 
 import { axiosInstance } from 'src/shared/axios-instance';
 import { AppThunk } from './store';
+import { Map, Marker, Popup } from 'mapbox-gl';
+import styled from 'styled-components';
 
 const set_map = 'set_map';
 const set_loading = 'set_loading';
 
 interface AppMapSetType extends Action<typeof set_map> {
-  payload: { map: any };
+  payload: { map: Map };
 }
 
 interface AppMapLoadingType extends Action<typeof set_loading> {
   payload: { loading: boolean };
 }
 
-export const setAppMapAction = (map: any): AppMapSetType => ({
+export const setAppMapAction = (map: Map): AppMapSetType => ({
   type: set_map,
   payload: { map },
 });
@@ -31,7 +32,7 @@ export const setAppMapLoadingAction = (
 
 type State = {
   loading: boolean;
-  map: any;
+  map: Map;
 };
 
 const initState: State = {
@@ -72,25 +73,21 @@ export const fetchApplications = (): AppThunk<void> => async (
     dispatch(setAppMapLoadingAction(false));
 
     const map = getState().appMapReducer.map;
+
     data.forEach(({ location, ...item }) => {
-      var myIcon = DG.icon({
-        iconUrl: '../assets/driver.png',
-        iconRetinaUrl: 'my-icon@2x.png',
-        iconSize: [38, 95],
-        iconAnchor: [22, 94],
-        popupAnchor: [-3, -76],
-        shadowUrl: 'my-icon-shadow.png',
-        shadowRetinaUrl: 'my-icon-shadow@2x.png',
-        shadowSize: [68, 95],
-        shadowAnchor: [22, 94],
-      });
+      const {
+        coordinates: [lng, lat],
+      } = location;
 
-      DG.marker([...location.coordinates.reverse()], { icon: myIcon }).addTo(
-        map
+      const el = document.createElement('div');
+      el.className = item.role_id === 1 ? 'car' : 'passenger';
+
+      var popup = new Popup({ offset: 25 }).setHTML(
+        `<a href="tg://resolve?domain=${item.telegram}">Telegram</a>`
       );
-    });
 
-    DG.marker([]);
+      new Marker(el).setLngLat({ lat, lng }).setPopup(popup).addTo(map);
+    });
   } catch (error) {
     dispatch(setAppMapLoadingAction(false));
   }

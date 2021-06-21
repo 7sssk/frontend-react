@@ -1,65 +1,59 @@
-import { Dispatch, memo, SetStateAction, useEffect, useState } from 'react';
-import DG from '2gis-maps';
-import { createContext } from 'react';
-import { useContext } from 'react';
-import { useAppDispatch } from 'src/shared/hooks';
+import { useEffect, useRef, useState } from 'react';
+import {
+  Map,
+  GeolocateControl,
+  FullscreenControl,
+  NavigationControl,
+} from 'mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
+import { useAppDispatch, useAppSelector } from 'src/shared/hooks';
 import { setAppMapAction } from 'src/redux';
 
-// export const MapContext = createContext<[any, Dispatch<SetStateAction<any>>]>(null)
-
-// export const MapProvider: React.FC = ({ children }) => {
-//   const [map, setMap] = useState<any>(null)
-
-//   return <MapContext.Provider value={[map, setMap]}>{children}</MapContext.Provider>
-// }
-
-const MapWrapper = memo(
-  () => {
-    return (
-      <div id="map-container" style={{ width: '100%', height: '100%' }}></div>
-    );
-  },
-  () => true
-);
-
 export const AppMap = () => {
-  // const [_, setMapInstance] = useContext(MapContext)
+  const mapContainer = useRef<HTMLDivElement>(null);
+  const { map } = useAppSelector((s) => s.appMapReducer);
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const map = DG.map('map-container', {
-      center: [51.15, 71.42],
-      zoom: 13,
-      geoclicker: true,
-      zoomControl: false,
+    if (map) {
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(({ coords }) => {
+      const { longitude, latitude } = coords;
+      const _map = initMap(mapContainer.current, { longitude, latitude });
+
+      _map.addControl(
+        new GeolocateControl({
+          positionOptions: {
+            enableHighAccuracy: true,
+          },
+          fitBoundsOptions: {
+            animate: false,
+            zoom: 15,
+          },
+          showAccuracyCircle: false,
+        })
+      );
+
+      _map.addControl(new FullscreenControl());
+      _map.addControl(new NavigationControl());
+
+      dispatch(setAppMapAction(_map));
     });
+  }, []);
 
-    map
-      .locate({ setView: true, enableHighAccuracy: true })
-      .on('locationfound', function (e) {
-        DG.marker([e.latitude, e.longitude]).addTo(map);
-      })
-      .on('locationerror', function (e) {
-        DG.popup()
-          .setLatLng(map.getCenter())
-          .setContent('Доступ к определению местоположения отключён')
-          .openOn(map);
-      });
-
-    DG.control.traffic({ position: 'topright' }).addTo(map);
-    DG.control.location({ position: 'topright' }).addTo(map);
-    DG.control.zoom({ position: 'bottomright' }).addTo(map);
-
-    // setMapInstance(map)
-
-    dispatch(setAppMapAction(map));
-
-    return () => {
-      map.remove();
-    };
-  }, [dispatch]);
-
-  return <MapWrapper />;
+  return <div ref={mapContainer} style={{ height: '100%', width: '100%' }} />;
 };
 
-// export const useAppMap = () => useContext(MapContext)
+const initMap = (mapContainer: HTMLDivElement, { longitude, latitude }) => {
+  return new Map({
+    container: mapContainer,
+    style: 'mapbox://styles/mapbox/streets-v11',
+    center: [longitude, latitude],
+    zoom: 15,
+    attributionControl: true,
+    accessToken:
+      'pk.eyJ1Ijoia293cGVuZGkiLCJhIjoiY2txNWZzeTdvMTM5ajJwbzB2ZXdzYjJ0dSJ9.5OgNiQgqr3qBkVDPZl2yKA',
+  });
+};

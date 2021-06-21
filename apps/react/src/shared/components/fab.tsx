@@ -2,7 +2,6 @@ import React from 'react';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
-import { FaCar, FaWalking } from 'react-icons/all';
 import styled from 'styled-components';
 import { Backdrop } from '@material-ui/core';
 

@@ -15,6 +15,23 @@ const GlobalStyle = createGlobalStyle`
   html, body {
     margin: 0;
   }
+
+  .car {
+    background-image: url('./assets/driver.png');
+    width: 50px;
+    height: 50px;
+    background-size: 100%;
+    background-repeat: no-repeat;
+  }
+
+  .passenger {
+    background-image: url('./assets/passenger.png');
+    width: 50px;
+    height: 50px;
+    background-size: 100%;
+    background-repeat: no-repeat;
+  }
+
 `;
 function App() {
   const dispatch = useAppDispatch();
