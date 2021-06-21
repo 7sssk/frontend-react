@@ -14,18 +14,18 @@ type Props = {
 
 export const ApplicationMap: FC<Props> = ({ onClick }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
-  const [map, setMap] = useState(null);
+  const [_map, setMap] = useState(null);
 
   useEffect(() => {
-    if (map) {
+    if (_map) {
       return;
     }
 
     navigator.geolocation.getCurrentPosition(({ coords }) => {
       const { longitude, latitude } = coords;
-      const _map = initMap(mapContainer.current, { longitude, latitude });
+      const map = initMap(mapContainer.current, { longitude, latitude });
 
-      _map.addControl(
+      map.addControl(
         new GeolocateControl({
           positionOptions: {
             enableHighAccuracy: true,
@@ -38,26 +38,26 @@ export const ApplicationMap: FC<Props> = ({ onClick }) => {
         })
       );
 
-      _map.addControl(new FullscreenControl());
-      _map.addControl(new NavigationControl());
+      map.addControl(new FullscreenControl());
+      map.addControl(new NavigationControl());
 
       let marker: Marker;
 
-      _map.on('click', ({ lngLat }) => {
+      map.on('click', ({ lngLat }) => {
         onClick(lngLat);
         if (marker) {
           marker.remove();
         }
-        marker = new Marker().setLngLat(lngLat).addTo(_map);
+        marker = new Marker().setLngLat(lngLat).addTo(map);
       });
 
       setMap(map);
 
       return () => {
-        _map.remove();
+        map.remove();
       };
     });
-  }, []);
+  }, [_map, onClick]);
 
   return <div ref={mapContainer} style={{ height: '100%', width: '100%' }} />;
 };

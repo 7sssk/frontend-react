@@ -10,20 +10,20 @@ import { setAppMapAction } from 'src/redux';
 
 export const AppMap = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
-  const { map } = useAppSelector((s) => s.appMapReducer);
+  const appMapState = useAppSelector((s) => s.appMapReducer);
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (map) {
+    if (appMapState.map) {
       return;
     }
 
     navigator.geolocation.getCurrentPosition(({ coords }) => {
       const { longitude, latitude } = coords;
-      const _map = initMap(mapContainer.current, { longitude, latitude });
+      const map = initMap(mapContainer.current, { longitude, latitude });
 
-      _map.addControl(
+      map.addControl(
         new GeolocateControl({
           positionOptions: {
             enableHighAccuracy: true,
@@ -36,12 +36,12 @@ export const AppMap = () => {
         })
       );
 
-      _map.addControl(new FullscreenControl());
-      _map.addControl(new NavigationControl());
+      map.addControl(new FullscreenControl());
+      map.addControl(new NavigationControl());
 
-      dispatch(setAppMapAction(_map));
+      dispatch(setAppMapAction(map));
     });
-  }, []);
+  }, [dispatch, appMapState.map]);
 
   return <div ref={mapContainer} style={{ height: '100%', width: '100%' }} />;
 };
