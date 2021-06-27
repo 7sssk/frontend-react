@@ -6,7 +6,7 @@
     "dev": "yarn ui & yarn server",
     "start": "node dist/apps/api/main.js",
     "nx": "nx",
-    "ui": "nx serve react",
+    "ui": "nx serve react --host 0.0.0.0",
     "server": "nx serve api",
     "build": "nx build",
     "test": "nx test",

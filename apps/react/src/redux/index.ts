@@ -1,3 +1,3 @@
 export * from './store';
-export * from './roles';
 export * from './map.redux';
+export * from './shared.redux';

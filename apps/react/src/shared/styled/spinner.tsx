@@ -1,5 +1,7 @@
 import { useTheme } from '@material-ui/core';
 import { FC } from 'react';
+import Div100vh from 'react-div-100vh';
+
 import styled from 'styled-components';
 
 export const Spinner: FC = () => {
@@ -7,11 +9,13 @@ export const Spinner: FC = () => {
     palette: { primary },
   } = useTheme();
   return (
-    <C>
-      <div className="loader" style={{ color: primary.main }}>
-        Loading...
-      </div>
-    </C>
+    <Div100vh>
+      <C>
+        <div className="loader" style={{ color: primary.main }}>
+          Loading...
+        </div>
+      </C>
+    </Div100vh>
   );
 };
 

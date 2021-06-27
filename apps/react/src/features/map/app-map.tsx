@@ -6,7 +6,7 @@ import {
   NavigationControl,
 } from 'mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import { useAppDispatch, useAppSelector } from 'src/shared/hooks';
-import { setAppMapAction } from 'src/redux';
+import { fetchApplications, setAppMapAction } from 'src/redux';
 
 export const AppMap = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
@@ -40,6 +40,7 @@ export const AppMap = () => {
       map.addControl(new NavigationControl());
 
       dispatch(setAppMapAction(map));
+      dispatch(fetchApplications());
     });
   }, [dispatch, appMapState.map]);
 

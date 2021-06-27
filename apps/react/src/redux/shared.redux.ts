@@ -1,8 +1,10 @@
 import { Action } from 'redux';
+import { Role } from 'src/models';
+import { Solat } from 'src/models/solat';
 import { axiosInstance } from 'src/shared/axios-instance';
-import { Role } from '../../models/role';
-import { AppThunk } from '../store';
+import { AppThunk } from './store';
 
+const set_solats = 'set_solats';
 const set_selected_role = 'set_selected_role';
 const set_roles = 'set_roles';
 
@@ -24,22 +26,38 @@ export const setAllRoles = (roles: Role[]): RolesSetType => ({
   type: set_roles,
   payload: { roles },
 });
+interface SolatsType extends Action<typeof set_solats> {
+  payload: { solats: Solat[] };
+}
+
+const setSolatsAction = (solats: Solat[]): SolatsType => ({
+  type: set_solats,
+  payload: { solats },
+});
 
 type State = {
+  solats: Solat[];
   roles: Role[];
   selectedRole: Role | null;
 };
 
 const initState: State = {
-  selectedRole: null,
+  solats: [],
   roles: [],
+  selectedRole: null,
 };
 
-export const roleReducer = (
+export const sharedReducer = (
   state = initState,
-  action: SelectedRoleSetType | RolesSetType
+  action: SolatsType | SelectedRoleSetType | RolesSetType
 ): State => {
   switch (action.type) {
+    case set_solats:
+      return {
+        ...state,
+        solats: action.payload.solats,
+      };
+
     case set_roles:
       return {
         ...state,
@@ -53,10 +71,14 @@ export const roleReducer = (
         selectedRole: role,
       };
     }
-
     default:
       return state;
   }
+};
+
+export const fetchSolatsThunk = (): AppThunk<void> => async (dispatch) => {
+  const { data } = await axiosInstance.get(`/dict/solats`);
+  dispatch(setSolatsAction(data));
 };
 
 export const fetchRolesThunk = (): AppThunk<void> => async (dispatch) => {

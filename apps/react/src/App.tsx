@@ -4,8 +4,8 @@ import { Apply } from './features/apply/apply';
 import { Spinner } from './shared/styled/spinner';
 import { AppMap } from './features/map/app-map';
 import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from './shared/hooks';
-import { fetchApplications, fetchRolesThunk } from './redux';
+import { useAppDispatch } from './shared/hooks';
+import { fetchRolesThunk, fetchSolatsThunk } from './redux';
 import { useRequest } from 'use-promise-request';
 
 const GlobalStyle = createGlobalStyle`
@@ -35,19 +35,23 @@ const GlobalStyle = createGlobalStyle`
 `;
 function App() {
   const dispatch = useAppDispatch();
-  const { loading } = useAppSelector((s) => s.appMapReducer);
+  const { loading, request } = useRequest({ isLoading: true });
 
   useEffect(() => {
-    dispatch(fetchRolesThunk());
-    dispatch(fetchApplications());
-  }, [dispatch]);
+    request(
+      Promise.all([dispatch(fetchRolesThunk()), dispatch(fetchSolatsThunk())])
+    );
+  }, [dispatch, request]);
+
+  if (loading) {
+    return <Spinner />;
+  }
 
   return (
     <>
       <GlobalStyle />
 
       <Div100vh>
-        {loading && <Spinner />}
         <AppMap />
         <Apply />
       </Div100vh>

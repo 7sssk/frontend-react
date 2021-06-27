@@ -27,7 +27,7 @@ export const Form: FC<Props> = ({ solats, roleId, onSubmit }) => {
     defaultValues: {
       location: [],
       comment: '',
-      return: true,
+      return: false,
       solat_id: 1,
       telegram: '',
       role_id: roleId,
@@ -39,11 +39,7 @@ export const Form: FC<Props> = ({ solats, roleId, onSubmit }) => {
 
   return (
     <>
-      <Typography component="h6" variant="h6" color="primary">
-        {'indicate your location'.toUpperCase()}
-      </Typography>
-
-      <div style={{ width: '100%', height: 300 }}>
+      <div style={{ width: '100%', height: 300, marginBottom: 20 }}>
         <ApplicationMap onClick={setLatlng} />
       </div>
 
@@ -95,7 +91,6 @@ export const Form: FC<Props> = ({ solats, roleId, onSubmit }) => {
           render={({ field }) => {
             return (
               <FormControlLabel
-                {...field}
                 control={<Checkbox color="primary" {...field} />}
                 label="Return"
               />
@@ -146,9 +141,7 @@ export const Form: FC<Props> = ({ solats, roleId, onSubmit }) => {
 };
 
 const StyledForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  > * {
-    margin-top: 20px;
-  }
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+  grid-row-gap: 10px;
 `;

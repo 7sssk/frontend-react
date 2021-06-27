@@ -1,11 +1,11 @@
 import { Action } from 'redux';
 import { Application, ApplicationRequest } from 'src/models/applications';
-import { RoleIcon } from 'src/shared/components/role-icon';
 
 import { axiosInstance } from 'src/shared/axios-instance';
 import { AppThunk } from './store';
 import { Map, Marker, Popup } from 'mapbox-gl';
-import styled from 'styled-components';
+import { theme } from 'src/theme/material-theme';
+import { RoleIcon } from '../shared/components/role-icon';
 
 const set_map = 'set_map';
 const set_loading = 'set_loading';
@@ -74,19 +74,49 @@ export const fetchApplications = (): AppThunk<void> => async (
 
     const map = getState().appMapReducer.map;
 
-    data.forEach(({ location, ...item }) => {
+    data.forEach(({ location, role_id, solat_id, ...item }) => {
       const {
         coordinates: [lng, lat],
       } = location;
 
-      const el = document.createElement('div');
-      el.className = item.role_id === 1 ? 'car' : 'passenger';
+      // const el = document.createElement('div');
+      // el.className = item.role_id === 1 ? 'car' : 'passenger';
 
-      var popup = new Popup({ offset: 25 }).setHTML(
-        `<a href="tg://resolve?domain=${item.telegram}">Telegram</a>`
+      const popup = new Popup({ offset: 25 }).setHTML(
+        `
+
+        <div>
+          <h4>${
+            getState().sharedReducer.solats.find(({ id }) => id === solat_id)
+              ?.name
+          }</h4>
+        </div>
+        
+        <div>
+          <a href="tg://resolve?domain=${item.telegram}">Telegram</a>
+        </div>
+
+        <div>
+          <a>${
+            getState().sharedReducer.roles.find(({ id }) => id === role_id)
+              ?.name
+          }</a>
+        </div>
+
+        
+
+        <div>
+          <a>${item.return}</a>
+        </div>
+        `
       );
 
-      new Marker(el).setLngLat({ lat, lng }).setPopup(popup).addTo(map);
+      new Marker({
+        color: role_id === 1 ? theme.palette.primary.main : 'green',
+      })
+        .setLngLat({ lat, lng })
+        .setPopup(popup)
+        .addTo(map);
     });
   } catch (error) {
     dispatch(setAppMapLoadingAction(false));
@@ -96,8 +126,6 @@ export const fetchApplications = (): AppThunk<void> => async (
 export const fetchAddApplication = (
   newApplication: ApplicationRequest
 ): AppThunk<void> => async (dispatch) => {
-  try {
-    await axiosInstance.post<Application>('/applications', newApplication);
-    dispatch(fetchApplications());
-  } catch (error) {}
+  await axiosInstance.post<Application>('/applications', newApplication);
+  dispatch(fetchApplications());
 };

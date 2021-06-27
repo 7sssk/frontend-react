@@ -7,6 +7,8 @@ import {
   Marker,
 } from 'mapbox-gl';
 import { LatLng } from 'src/models/map.model';
+import { useAppSelector } from 'src/shared/hooks';
+import { theme } from 'src/theme/material-theme';
 
 type Props = {
   onClick: (arg: LatLng) => void;
@@ -15,6 +17,7 @@ type Props = {
 export const ApplicationMap: FC<Props> = ({ onClick }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const [_map, setMap] = useState(null);
+  const { selectedRole } = useAppSelector((s) => s.sharedReducer);
 
   useEffect(() => {
     if (_map) {
@@ -48,7 +51,11 @@ export const ApplicationMap: FC<Props> = ({ onClick }) => {
         if (marker) {
           marker.remove();
         }
-        marker = new Marker().setLngLat(lngLat).addTo(map);
+        marker = new Marker({
+          color: selectedRole.id === 1 ? theme.palette.primary.main : 'green',
+        })
+          .setLngLat(lngLat)
+          .addTo(map);
       });
 
       setMap(map);
