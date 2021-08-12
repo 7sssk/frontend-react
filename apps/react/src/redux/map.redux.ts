@@ -5,7 +5,6 @@ import { axiosInstance } from 'src/shared/axios-instance';
 import { AppThunk } from './store';
 import { Map, Marker, Popup } from 'mapbox-gl';
 import { theme } from 'src/theme/material-theme';
-import { RoleIcon } from '../shared/components/role-icon';
 
 const set_map = 'set_map';
 const set_loading = 'set_loading';
@@ -84,6 +83,11 @@ export const fetchApplications = (): AppThunk<void> => async (
 
       const popup = new Popup({ offset: 25 }).setHTML(
         `
+        <div>
+         <h3>${
+           getState().sharedReducer.roles.find(({ id }) => id === role_id)?.name
+         }</h3>
+        </div>
 
         <div>
           <h4>${
@@ -95,18 +99,9 @@ export const fetchApplications = (): AppThunk<void> => async (
         <div>
           <a href="tg://resolve?domain=${item.telegram}">Telegram</a>
         </div>
-
-        <div>
-          <a>${
-            getState().sharedReducer.roles.find(({ id }) => id === role_id)
-              ?.name
-          }</a>
-        </div>
-
         
-
         <div>
-          <a>${item.return}</a>
+          <a>Return: ${item.return ? 'Yes' : 'No'}</a>
         </div>
         `
       );

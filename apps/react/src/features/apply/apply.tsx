@@ -1,14 +1,7 @@
 import { fetchAddApplication, setSelectedRoleAction } from 'src/redux';
 import { SpeedDials, SpeedDialsAction } from 'src/shared/components/fab';
 import { useAppDispatch, useAppSelector } from 'src/shared/hooks';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  useMediaQuery,
-  useTheme,
-} from '@material-ui/core';
-import styled from 'styled-components';
+import { Dialog, useMediaQuery, useTheme } from '@material-ui/core';
 import { useMemo } from 'react';
 import { RoleIcon } from 'src/shared/components/role-icon';
 import { Form } from './components/form';
@@ -37,12 +30,14 @@ export const Apply = () => {
 
   const onSubmit = (v: ApplicationRequest) => {
     dispatch(fetchAddApplication(v));
-    setSelectedRoleAction(null);
+    onSelectRole(null);
   };
 
   return (
     <>
-      <SpeedDials actions={actions} onSelectRole={onSelectRole} />
+      {actions.length && (
+        <SpeedDials actions={actions} onSelectRole={onSelectRole} />
+      )}
       {selectedRole && (
         <Dialog
           open={!!selectedRole}
@@ -54,21 +49,9 @@ export const Apply = () => {
             <RoleIcon roleId={selectedRole.id} />
           </TMSDialogTitle>
 
-          <DialogContent>
-            <Form
-              solats={solats}
-              roleId={selectedRole.id}
-              onSubmit={onSubmit}
-            />
-          </DialogContent>
-          <DialogActions></DialogActions>
+          <Form solats={solats} roleId={selectedRole.id} onSubmit={onSubmit} />
         </Dialog>
       )}
     </>
   );
 };
-
-const StyledMap = styled.div`
-  height: 500px;
-  width: 100%;
-`;

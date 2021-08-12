@@ -6,7 +6,7 @@ import {
   Select,
   Button,
   TextField,
-  Typography,
+  Divider,
 } from '@material-ui/core';
 import { FC, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
@@ -23,7 +23,7 @@ type Props = {
 };
 
 export const Form: FC<Props> = ({ solats, roleId, onSubmit }) => {
-  const { handleSubmit, control, getValues } = useForm<ApplicationRequest>({
+  const { handleSubmit, control, formState } = useForm<ApplicationRequest>({
     defaultValues: {
       location: [],
       comment: '',
@@ -31,7 +31,7 @@ export const Form: FC<Props> = ({ solats, roleId, onSubmit }) => {
       solat_id: 1,
       telegram: '',
       role_id: roleId,
-      huruj_date: new Date().toJSON(),
+      huruj_date: '',
     },
   });
 
@@ -42,6 +42,8 @@ export const Form: FC<Props> = ({ solats, roleId, onSubmit }) => {
       <div style={{ width: '100%', height: 300, marginBottom: 20 }}>
         <ApplicationMap onClick={setLatlng} />
       </div>
+
+      <Divider />
 
       <StyledForm
         onSubmit={handleSubmit((data) => {
@@ -69,30 +71,16 @@ export const Form: FC<Props> = ({ solats, roleId, onSubmit }) => {
 
         <Controller
           name="huruj_date"
+          rules={{ required: true }}
           control={control}
           render={({ field }) => {
             return (
               <TextField
                 {...field}
-                id="date"
+                variant="outlined"
                 label="Date"
                 type="date"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-            );
-          }}
-        />
-
-        <Controller
-          name="return"
-          control={control}
-          render={({ field }) => {
-            return (
-              <FormControlLabel
-                control={<Checkbox color="primary" {...field} />}
-                label="Return"
+                required
               />
             );
           }}
@@ -101,6 +89,7 @@ export const Form: FC<Props> = ({ solats, roleId, onSubmit }) => {
         <Controller
           name="telegram"
           control={control}
+          rules={{ required: true }}
           render={({ field }) => (
             <TextField
               {...field}
@@ -125,6 +114,19 @@ export const Form: FC<Props> = ({ solats, roleId, onSubmit }) => {
           )}
         />
 
+        <Controller
+          name="return"
+          control={control}
+          render={({ field }) => {
+            return (
+              <FormControlLabel
+                control={<Checkbox color="primary" {...field} />}
+                label="Return"
+              />
+            );
+          }}
+        />
+
         <Button
           color="primary"
           variant="contained"
@@ -142,6 +144,7 @@ export const Form: FC<Props> = ({ solats, roleId, onSubmit }) => {
 
 const StyledForm = styled.form`
   display: grid;
-  grid-template-rows: repeat(5, 1fr);
-  grid-row-gap: 10px;
+  grid-row-gap: 15px;
+  padding: 15px;
+  overflow-y: auto;
 `;

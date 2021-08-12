@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Map,
   GeolocateControl,
@@ -9,6 +9,7 @@ import {
 import { LatLng } from 'src/models/map.model';
 import { useAppSelector } from 'src/shared/hooks';
 import { theme } from 'src/theme/material-theme';
+import { environment } from 'src/environments/environment';
 
 type Props = {
   onClick: (arg: LatLng) => void;
@@ -19,14 +20,17 @@ export const ApplicationMap: FC<Props> = ({ onClick }) => {
   const [_map, setMap] = useState(null);
   const { selectedRole } = useAppSelector((s) => s.sharedReducer);
 
-  useEffect(() => {
-    if (_map) {
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(({ coords }) => {
-      const { longitude, latitude } = coords;
-      const map = initMap(mapContainer.current, { longitude, latitude });
+  const initMap = useMemo(
+    () => (mapContainer: HTMLDivElement, { longitude, latitude }) => {
+      const map = new Map({
+        container: mapContainer,
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: [longitude, latitude],
+        zoom: 15,
+        attributionControl: true,
+        accessToken:
+          'pk.eyJ1Ijoia293cGVuZGkiLCJhIjoiY2txNWZzeTdvMTM5ajJwbzB2ZXdzYjJ0dSJ9.5OgNiQgqr3qBkVDPZl2yKA',
+      });
 
       map.addControl(
         new GeolocateControl({
@@ -60,23 +64,42 @@ export const ApplicationMap: FC<Props> = ({ onClick }) => {
 
       setMap(map);
 
+      return map;
+    },
+    [selectedRole?.id, onClick]
+  );
+
+  useEffect(() => {
+    if (_map) {
+      return;
+    }
+
+    if (!environment.production) {
+      initMap(mapContainer.current, {
+        longitude: 71.42034199999999,
+        latitude: 51.1130742,
+      });
+
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(({ coords }) => {
+      const { longitude, latitude } = coords;
+      const map = initMap(mapContainer.current, { longitude, latitude });
+
       return () => {
         map.remove();
       };
     });
-  }, [_map, onClick]);
+  }, [_map, initMap]);
 
-  return <div ref={mapContainer} style={{ height: '100%', width: '100%' }} />;
-};
-
-const initMap = (mapContainer: HTMLDivElement, { longitude, latitude }) => {
-  return new Map({
-    container: mapContainer,
-    style: 'mapbox://styles/mapbox/streets-v11',
-    center: [longitude, latitude],
-    zoom: 15,
-    attributionControl: true,
-    accessToken:
-      'pk.eyJ1Ijoia293cGVuZGkiLCJhIjoiY2txNWZzeTdvMTM5ajJwbzB2ZXdzYjJ0dSJ9.5OgNiQgqr3qBkVDPZl2yKA',
-  });
+  return (
+    <div
+      ref={mapContainer}
+      style={{
+        height: '100%',
+        width: '100%',
+      }}
+    />
+  );
 };
