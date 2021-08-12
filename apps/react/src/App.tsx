@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import { useAppDispatch } from './shared/hooks';
 import { fetchRolesThunk, fetchSolatsThunk } from './redux';
 import { useRequest } from 'use-promise-request';
+import { theme } from './theme/material-theme';
 
 const GlobalStyle = createGlobalStyle`
 * {
@@ -15,23 +16,9 @@ const GlobalStyle = createGlobalStyle`
   html, body {
     margin: 0;
   }
-
-  .car {
-    background-image: url('./assets/driver.png');
-    width: 50px;
-    height: 50px;
-    background-size: 100%;
-    background-repeat: no-repeat;
+  i {
+    color: ${theme.palette.primary.main}
   }
-
-  .passenger {
-    background-image: url('./assets/passenger.png');
-    width: 50px;
-    height: 50px;
-    background-size: 100%;
-    background-repeat: no-repeat;
-  }
-
 `;
 function App() {
   const dispatch = useAppDispatch();

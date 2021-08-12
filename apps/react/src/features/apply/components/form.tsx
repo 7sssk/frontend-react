@@ -143,8 +143,11 @@ export const Form: FC<Props> = ({ solats, roleId, onSubmit }) => {
 };
 
 const StyledForm = styled.form`
-  display: grid;
-  grid-row-gap: 15px;
+  display: flex;
+  flex-direction: column;
   padding: 15px;
+  > * {
+    margin-bottom: 10px !important;
+  }
   overflow-y: auto;
 `;

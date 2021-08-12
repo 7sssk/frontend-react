@@ -78,17 +78,12 @@ export const fetchApplications = (): AppThunk<void> => async (
         coordinates: [lng, lat],
       } = location;
 
-      // const el = document.createElement('div');
-      // el.className = item.role_id === 1 ? 'car' : 'passenger';
+      const el = document.createElement('div');
+      el.className =
+        role_id === 1 ? 'fas fa-car fa-3x' : 'fas fa-walking fa-3x';
 
       const popup = new Popup({ offset: 25 }).setHTML(
         `
-        <div>
-         <h3>${
-           getState().sharedReducer.roles.find(({ id }) => id === role_id)?.name
-         }</h3>
-        </div>
-
         <div>
           <h4>${
             getState().sharedReducer.solats.find(({ id }) => id === solat_id)
@@ -106,12 +101,7 @@ export const fetchApplications = (): AppThunk<void> => async (
         `
       );
 
-      new Marker({
-        color: role_id === 1 ? theme.palette.primary.main : 'green',
-      })
-        .setLngLat({ lat, lng })
-        .setPopup(popup)
-        .addTo(map);
+      new Marker(el).setLngLat({ lat, lng }).setPopup(popup).addTo(map);
     });
   } catch (error) {
     dispatch(setAppMapLoadingAction(false));

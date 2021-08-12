@@ -1,4 +1,5 @@
 import 'flexboxgrid/css/flexboxgrid.min.css';
+import '@fortawesome/fontawesome-free/css/all.css';
 
 import ReactDOM from 'react-dom';
 import App from './App';
