@@ -71,10 +71,6 @@ export const AppMap = () => {
     }
 
     navigator.geolocation.getCurrentPosition(({ coords }) => {
-      console.log(
-        '🚀 ~ file: app-map.tsx ~ line 62 ~ navigator.geolocation.getCurrentPosition ~ coords',
-        coords
-      );
       const { longitude, latitude } = coords;
       initMap(mapContainer.current, { longitude, latitude });
     });

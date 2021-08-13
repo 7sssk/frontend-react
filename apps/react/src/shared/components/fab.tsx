@@ -20,8 +20,8 @@ export const SpeedDials: React.FC<Props> = ({ onSelectRole, actions }) => {
   const [open, setOpen] = React.useState(false);
 
   const handleSelectRole = (roleId: number) => {
-    onSelectRole(roleId);
     setOpen(false);
+    onSelectRole(roleId);
   };
 
   const handleOpen = () => {
@@ -32,12 +32,13 @@ export const SpeedDials: React.FC<Props> = ({ onSelectRole, actions }) => {
     <>
       <Backdrop open={open} style={{ zIndex: 1 }} />
       <C
-        ariaLabel="SpeedDial example"
+        ariaLabel="apply"
         icon={<SpeedDialIcon />}
         onClose={setOpen.bind(null, false)}
         onOpen={handleOpen}
         open={open}
         direction={'up'}
+        color="primary"
       >
         {actions.map((action) => (
           <SpeedDialAction

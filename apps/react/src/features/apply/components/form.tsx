@@ -146,8 +146,9 @@ const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
   padding: 15px;
-  > * {
-    margin-bottom: 10px !important;
+  & > * {
+    margin-bottom: 5px !important;
+    margin-top: 5px !important;
   }
   overflow-y: auto;
 `;

@@ -50,16 +50,16 @@ export const ApplicationMap: FC<Props> = ({ onClick }) => {
 
       let marker: Marker;
 
+      const el = document.createElement('div');
+      el.className =
+        selectedRole.id === 1 ? 'fas fa-car fa-3x' : 'fas fa-walking fa-3x';
+
       map.on('click', ({ lngLat }) => {
         onClick(lngLat);
         if (marker) {
           marker.remove();
         }
-        marker = new Marker({
-          color: selectedRole.id === 1 ? theme.palette.primary.main : 'green',
-        })
-          .setLngLat(lngLat)
-          .addTo(map);
+        marker = new Marker(el).setLngLat(lngLat).addTo(map);
       });
 
       setMap(map);

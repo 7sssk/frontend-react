@@ -1,22 +1,35 @@
 import 'flexboxgrid/css/flexboxgrid.min.css';
 import '@fortawesome/fontawesome-free/css/all.css';
+import 'animate.css/animate.min.css';
 
 import ReactDOM from 'react-dom';
 import App from './App';
 import { store } from './redux/store';
 import { Provider } from 'react-redux';
-import { IconContext } from 'react-icons';
 import { ThemeProvider as MAterialThemeProvider } from '@material-ui/core';
 import { theme } from './theme/material-theme';
+import { createGlobalStyle } from 'styled-components';
+
+const GlobalStyle = createGlobalStyle`
+  * {
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  }
+  html, body {
+    margin: 0;
+  }
+
+  .fas, .fab {
+    color: ${theme.palette.primary.main} !important;
+  }
+`;
 
 ReactDOM.render(
   <Provider store={store}>
     <MAterialThemeProvider theme={theme}>
-      <IconContext.Provider
-        value={{ style: { color: theme.palette.primary.main }, size: '20px' }}
-      >
+      <>
+        <GlobalStyle />
         <App />
-      </IconContext.Provider>
+      </>
     </MAterialThemeProvider>
   </Provider>,
   document.getElementById('root')

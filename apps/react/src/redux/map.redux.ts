@@ -69,7 +69,6 @@ export const fetchApplications = (): AppThunk<void> => async (
 
   try {
     const { data } = await axiosInstance.get<Application[]>('/applications');
-    dispatch(setAppMapLoadingAction(false));
 
     const map = getState().appMapReducer.map;
 
@@ -102,6 +101,7 @@ export const fetchApplications = (): AppThunk<void> => async (
       );
 
       new Marker(el).setLngLat({ lat, lng }).setPopup(popup).addTo(map);
+      dispatch(setAppMapLoadingAction(false));
     });
   } catch (error) {
     dispatch(setAppMapLoadingAction(false));
@@ -110,7 +110,12 @@ export const fetchApplications = (): AppThunk<void> => async (
 
 export const fetchAddApplication = (
   newApplication: ApplicationRequest
-): AppThunk<void> => async (dispatch) => {
-  await axiosInstance.post<Application>('/applications', newApplication);
+): AppThunk<Promise<Application>> => async (dispatch) => {
+  const { data } = await axiosInstance.post<Application>(
+    '/applications',
+    newApplication
+  );
   dispatch(fetchApplications());
+
+  return data;
 };

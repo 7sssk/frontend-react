@@ -7,6 +7,8 @@ import { RoleIcon } from 'src/shared/components/role-icon';
 import { Form } from './components/form';
 import { ApplicationRequest } from 'src/models/applications';
 import { TMSDialogTitle } from 'src/shared/components/dialog-title';
+import { useRequest } from 'use-promise-request';
+import { Loader } from 'src/shared/styled/loader';
 
 export const Apply = () => {
   const theme = useTheme();
@@ -15,6 +17,8 @@ export const Apply = () => {
   const dispatch = useAppDispatch();
   const { selectedRole, roles } = useAppSelector((s) => s.sharedReducer);
   const { solats } = useAppSelector((s) => s.sharedReducer);
+
+  const { request, loading } = useRequest();
 
   const actions = useMemo<SpeedDialsAction[]>(() => {
     return roles.map(({ id, name }) => ({
@@ -29,15 +33,12 @@ export const Apply = () => {
   };
 
   const onSubmit = (v: ApplicationRequest) => {
-    dispatch(fetchAddApplication(v));
-    onSelectRole(null);
+    request(dispatch(fetchAddApplication(v))).then(() => onSelectRole(null));
   };
 
   return (
     <>
-      {actions.length && (
-        <SpeedDials actions={actions} onSelectRole={onSelectRole} />
-      )}
+      <SpeedDials actions={actions} onSelectRole={onSelectRole} />
       {selectedRole && (
         <Dialog
           open={!!selectedRole}
@@ -45,6 +46,7 @@ export const Apply = () => {
           fullWidth
           fullScreen={!matches}
         >
+          <Loader loading={loading} />
           <TMSDialogTitle onClose={onSelectRole.bind(null, null)}>
             <RoleIcon roleId={selectedRole.id} />
           </TMSDialogTitle>
