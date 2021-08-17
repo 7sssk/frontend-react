@@ -8,7 +8,7 @@ export const Loader: FC<{ loading: boolean }> = ({ loading }) => {
   } = useTheme();
   return (
     <C
-      loading={loading}
+      loading={loading ? 1 : 0}
       className="animate__animated animate__fadeOut animate__fadeIn"
     >
       <div className="row">
@@ -35,7 +35,7 @@ export const Loader: FC<{ loading: boolean }> = ({ loading }) => {
   );
 };
 
-const C = styled.div<{ loading: boolean }>`
+const C = styled.div<{ loading: number }>`
   display: ${(p) => (p.loading ? 'flex' : 'none')};
   background: #c4c4c4b1;
   position: absolute;

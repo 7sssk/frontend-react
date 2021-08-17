@@ -8,8 +8,6 @@ import {
 } from 'mapbox-gl';
 import { LatLng } from 'src/models/map.model';
 import { useAppSelector } from 'src/shared/hooks';
-import { theme } from 'src/theme/material-theme';
-import { environment } from 'src/environments/environment';
 
 type Props = {
   onClick: (arg: LatLng) => void;
@@ -17,13 +15,14 @@ type Props = {
 
 export const ApplicationMap: FC<Props> = ({ onClick }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
+
   const [_map, setMap] = useState(null);
   const { selectedRole } = useAppSelector((s) => s.sharedReducer);
 
   const initMap = useMemo(
-    () => (mapContainer: HTMLDivElement, { longitude, latitude }) => {
+    () => ({ longitude, latitude }) => {
       const map = new Map({
-        container: mapContainer,
+        container: mapContainer.current,
         style: 'mapbox://styles/mapbox/streets-v11',
         center: [longitude, latitude],
         zoom: 15,
@@ -74,8 +73,8 @@ export const ApplicationMap: FC<Props> = ({ onClick }) => {
       return;
     }
 
-    if (!environment.production) {
-      initMap(mapContainer.current, {
+    if (!navigator?.geolocation?.getCurrentPosition) {
+      initMap({
         longitude: 71.42034199999999,
         latitude: 51.1130742,
       });
@@ -85,7 +84,7 @@ export const ApplicationMap: FC<Props> = ({ onClick }) => {
 
     navigator.geolocation.getCurrentPosition(({ coords }) => {
       const { longitude, latitude } = coords;
-      const map = initMap(mapContainer.current, { longitude, latitude });
+      const map = initMap({ longitude, latitude });
 
       return () => {
         map.remove();

@@ -4,17 +4,11 @@ import { Application, ApplicationRequest } from 'src/models/applications';
 import { axiosInstance } from 'src/shared/axios-instance';
 import { AppThunk } from './store';
 import { Map, Marker, Popup } from 'mapbox-gl';
-import { theme } from 'src/theme/material-theme';
 
 const set_map = 'set_map';
-const set_loading = 'set_loading';
 
 interface AppMapSetType extends Action<typeof set_map> {
   payload: { map: Map };
-}
-
-interface AppMapLoadingType extends Action<typeof set_loading> {
-  payload: { loading: boolean };
 }
 
 export const setAppMapAction = (map: Map): AppMapSetType => ({
@@ -22,26 +16,17 @@ export const setAppMapAction = (map: Map): AppMapSetType => ({
   payload: { map },
 });
 
-export const setAppMapLoadingAction = (
-  loading: boolean
-): AppMapLoadingType => ({
-  type: set_loading,
-  payload: { loading },
-});
-
 type State = {
-  loading: boolean;
   map: Map;
 };
 
 const initState: State = {
-  loading: false,
   map: null,
 };
 
 export const appMapReducer = (
   state = initState,
-  action: AppMapSetType | AppMapLoadingType
+  action: AppMapSetType
 ): State => {
   switch (action.type) {
     case set_map:
@@ -50,23 +35,15 @@ export const appMapReducer = (
         map: action.payload.map,
       };
 
-    case set_loading:
-      return {
-        ...state,
-        loading: action.payload.loading,
-      };
-
     default:
       return state;
   }
 };
 
-export const fetchApplications = (): AppThunk<void> => async (
+export const fetchApplicationsThunk = (): AppThunk<Promise<void>> => async (
   dispatch,
   getState
 ) => {
-  dispatch(setAppMapLoadingAction(true));
-
   try {
     const { data } = await axiosInstance.get<Application[]>('/applications');
 
@@ -84,10 +61,9 @@ export const fetchApplications = (): AppThunk<void> => async (
       const popup = new Popup({ offset: 25 }).setHTML(
         `
         <div>
-          <h4>${
-            getState().sharedReducer.solats.find(({ id }) => id === solat_id)
-              ?.name
-          }</h4>
+          <h4>${getState().sharedReducer.solats.find(({ id }) => id === solat_id)
+          ?.name
+        }</h4>
         </div>
         
         <div>
@@ -101,10 +77,8 @@ export const fetchApplications = (): AppThunk<void> => async (
       );
 
       new Marker(el).setLngLat({ lat, lng }).setPopup(popup).addTo(map);
-      dispatch(setAppMapLoadingAction(false));
     });
   } catch (error) {
-    dispatch(setAppMapLoadingAction(false));
   }
 };
 
@@ -115,7 +89,7 @@ export const fetchAddApplication = (
     '/applications',
     newApplication
   );
-  dispatch(fetchApplications());
+  dispatch(fetchApplicationsThunk());
 
   return data;
 };

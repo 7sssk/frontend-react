@@ -76,12 +76,12 @@ export const sharedReducer = (
   }
 };
 
-export const fetchSolatsThunk = (): AppThunk<void> => async (dispatch) => {
+export const fetchSolatsThunk = (): AppThunk<Promise<void>> => async (dispatch) => {
   const { data } = await axiosInstance.get(`/dict/solats`);
   dispatch(setSolatsAction(data));
 };
 
-export const fetchRolesThunk = (): AppThunk<void> => async (dispatch) => {
+export const fetchRolesThunk = (): AppThunk<Promise<void>> => async (dispatch) => {
   const { data } = await axiosInstance.get<Role[]>(`/dict/roles`);
   dispatch(setAllRoles(data));
 };

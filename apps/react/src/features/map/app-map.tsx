@@ -1,24 +1,24 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import {
   Map,
   GeolocateControl,
   FullscreenControl,
   NavigationControl,
-} from 'mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
+} from 'mapbox-gl';
 import { useAppDispatch, useAppSelector } from 'src/shared/hooks';
-import { fetchApplications, setAppMapAction } from 'src/redux';
-import { environment } from 'src/environments/environment';
+import { fetchApplicationsThunk, setAppMapAction } from 'src/redux';
 
 export const AppMap = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
+
   const appMapState = useAppSelector((s) => s.appMapReducer);
 
   const dispatch = useAppDispatch();
 
   const initMap = useCallback(
-    (mapContainer: HTMLDivElement, { longitude, latitude }) => {
+    ({ longitude, latitude }) => {
       const map = new Map({
-        container: mapContainer,
+        container: mapContainer.current,
         style: 'mapbox://styles/mapbox/streets-v11',
         center: [longitude, latitude],
         zoom: 15,
@@ -47,13 +47,12 @@ export const AppMap = () => {
         map.getCanvas().style.cursor = 'pointer';
       });
 
-      // Change it back to a pointer when it leaves.
       map.on('mouseleave', 'places', () => {
         map.getCanvas().style.cursor = '';
       });
 
       dispatch(setAppMapAction(map));
-      dispatch(fetchApplications());
+      dispatch(fetchApplicationsThunk());
     },
     [dispatch]
   );
@@ -63,16 +62,19 @@ export const AppMap = () => {
       return;
     }
 
-    if (!environment.production) {
-      return initMap(mapContainer.current, {
+
+    if (!navigator?.geolocation?.getCurrentPosition) {
+      initMap({
         longitude: 71.42034199999999,
         latitude: 51.1130742,
       });
+
+      return;
     }
 
     navigator.geolocation.getCurrentPosition(({ coords }) => {
       const { longitude, latitude } = coords;
-      initMap(mapContainer.current, { longitude, latitude });
+      initMap({ longitude, latitude });
     });
   }, [appMapState.map, initMap]);
 
