@@ -9,7 +9,7 @@ export const Loader: FC<{ loading: boolean }> = ({ loading }) => {
   return (
     <C
       loading={loading ? 1 : 0}
-      className="animate__animated animate__fadeOut animate__fadeIn"
+      className="animate__animated animate__fadeOut animate__fadeIn animate__faster"
     >
       <div className="row">
         <div

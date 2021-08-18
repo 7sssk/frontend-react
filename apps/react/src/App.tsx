@@ -4,7 +4,11 @@ import { Loader } from './shared/styled/loader';
 import { AppMap } from './features/map/app-map';
 import { useEffect } from 'react';
 import { useAppDispatch } from './shared/hooks';
-import { fetchApplicationsThunk, fetchRolesThunk, fetchSolatsThunk } from './redux';
+import {
+  fetchApplicationsThunk,
+  fetchRolesThunk,
+  fetchSolatsThunk,
+} from './redux';
 import { useRequest } from 'use-promise-request';
 
 function App() {
@@ -12,19 +16,25 @@ function App() {
   const { loading, request } = useRequest({ isLoading: true });
 
   useEffect(() => {
-    request(Promise.all([
-      dispatch(fetchApplicationsThunk),
-      dispatch(fetchSolatsThunk()),
-      dispatch(fetchRolesThunk()),
-    ]));
-
+    request(
+      Promise.all([
+        dispatch(fetchApplicationsThunk),
+        dispatch(fetchSolatsThunk()),
+        dispatch(fetchRolesThunk()),
+      ])
+    );
   }, [request, dispatch]);
 
   return (
     <Div100vh>
       <Loader loading={loading} />
       <AppMap />
-      <Apply />
+
+      {!loading && (
+        <>
+          <Apply />
+        </>
+      )}
     </Div100vh>
   );
 }
