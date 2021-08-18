@@ -44,7 +44,6 @@ export const SpeedDials: React.FC<Props> = ({ onSelectRole, actions }) => {
           <SpeedDialAction
             key={action.name}
             icon={action.icon}
-            tooltipOpen
             tooltipTitle={action.name.toUpperCase()}
             onClick={handleSelectRole.bind(null, action.roleId)}
           />

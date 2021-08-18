@@ -1,7 +1,7 @@
 import { fetchAddApplication, setSelectedRoleAction } from 'src/redux';
 import { SpeedDials, SpeedDialsAction } from 'src/shared/components/fab';
 import { useAppDispatch, useAppSelector } from 'src/shared/hooks';
-import { Button, Dialog, useMediaQuery, useTheme } from '@material-ui/core';
+import { Dialog, useMediaQuery, useTheme } from '@material-ui/core';
 import { useMemo } from 'react';
 import { RoleIcon } from 'src/shared/components/role-icon';
 import { Form } from './components/form';
@@ -11,7 +11,6 @@ import { ApplicationRequest } from 'src/models/applications';
 import { TMSDialogTitle } from 'src/shared/components/dialog-title';
 import { useRequest } from 'use-promise-request';
 import { Loader } from 'src/shared/styled/loader';
-import { useState } from 'react';
 import styled from 'styled-components';
 
 export const Apply = () => {
@@ -23,7 +22,6 @@ export const Apply = () => {
   const { solats } = useAppSelector((s) => s.sharedReducer);
 
   const { request, loading } = useRequest();
-  const [open, onDismiss] = useState(true);
 
   const actions = useMemo<SpeedDialsAction[]>(() => {
     return roles.map(({ id, name }) => ({
@@ -87,12 +85,12 @@ export const Apply = () => {
   );
 };
 
-const StyledSwipeableBottomSheet = styled(SwipeableBottomSheet)`
-  .ReactSwipeableBottomSheet--closed,
-  .react-swipeable-view-container {
-    border-radius: 20px !important;
-  }
-  .react-swipeable-view-container {
-    box-shadow: none !important;
-  }
-`;
+// const StyledSwipeableBottomSheet = styled(SwipeableBottomSheet)`
+//   .ReactSwipeableBottomSheet--closed,
+//   .react-swipeable-view-container {
+//     border-radius: 20px !important;
+//   }
+//   .react-swipeable-view-container {
+//     box-shadow: none !important;
+//   }
+// `;

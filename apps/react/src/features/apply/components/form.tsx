@@ -79,6 +79,9 @@ export const Form: FC<Props> = ({ solats, roleId, onSubmit }) => {
             render={({ field }) => {
               return (
                 <TextField
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
                   fullWidth
                   {...field}
                   variant="outlined"
@@ -132,7 +135,6 @@ export const Form: FC<Props> = ({ solats, roleId, onSubmit }) => {
             render={({ field }) => {
               return (
                 <FormControlLabel
-
                   control={<Checkbox color="primary" {...field} />}
                   label="Return"
                 />

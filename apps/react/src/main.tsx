@@ -11,13 +11,6 @@ import { theme } from './theme/material-theme';
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
-  * {
-    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-  }
-  html, body {
-    margin: 0;
-  }
-
   .fas, .fab {
     color: ${theme.palette.primary.main} !important;
   }
