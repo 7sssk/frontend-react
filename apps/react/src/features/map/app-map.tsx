@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Map,
   GeolocateControl,
@@ -7,6 +7,8 @@ import {
 } from 'mapbox-gl';
 import { useAppDispatch, useAppSelector } from 'src/shared/hooks';
 import { fetchApplicationsThunk, setAppMapAction } from 'src/redux';
+import { environment } from 'src/environments/environment';
+import { isMobile } from 'react-device-detect'
 
 export const AppMap = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
@@ -63,7 +65,7 @@ export const AppMap = () => {
     }
 
 
-    if (!navigator?.geolocation?.getCurrentPosition) {
+    if (!environment.production && isMobile) {
       initMap({
         longitude: 71.42034199999999,
         latitude: 51.1130742,

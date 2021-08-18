@@ -8,6 +8,8 @@ import {
 } from 'mapbox-gl';
 import { LatLng } from 'src/models/map.model';
 import { useAppSelector } from 'src/shared/hooks';
+import { environment } from 'src/environments/environment';
+import { isMobile } from 'react-device-detect';
 
 type Props = {
   onClick: (arg: LatLng) => void;
@@ -73,7 +75,7 @@ export const ApplicationMap: FC<Props> = ({ onClick }) => {
       return;
     }
 
-    if (!navigator?.geolocation?.getCurrentPosition) {
+    if (!environment.production && isMobile) {
       initMap({
         longitude: 71.42034199999999,
         latitude: 51.1130742,

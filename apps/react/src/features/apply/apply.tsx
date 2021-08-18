@@ -1,14 +1,18 @@
 import { fetchAddApplication, setSelectedRoleAction } from 'src/redux';
 import { SpeedDials, SpeedDialsAction } from 'src/shared/components/fab';
 import { useAppDispatch, useAppSelector } from 'src/shared/hooks';
-import { Dialog, useMediaQuery, useTheme } from '@material-ui/core';
+import { Button, Dialog, useMediaQuery, useTheme } from '@material-ui/core';
 import { useMemo } from 'react';
 import { RoleIcon } from 'src/shared/components/role-icon';
 import { Form } from './components/form';
+
+import SwipeableBottomSheet from 'react-swipeable-bottom-sheet';
 import { ApplicationRequest } from 'src/models/applications';
 import { TMSDialogTitle } from 'src/shared/components/dialog-title';
 import { useRequest } from 'use-promise-request';
 import { Loader } from 'src/shared/styled/loader';
+import { useState } from 'react';
+import styled from 'styled-components';
 
 export const Apply = () => {
   const theme = useTheme();
@@ -19,6 +23,7 @@ export const Apply = () => {
   const { solats } = useAppSelector((s) => s.sharedReducer);
 
   const { request, loading } = useRequest();
+  const [open, onDismiss] = useState(true);
 
   const actions = useMemo<SpeedDialsAction[]>(() => {
     return roles.map(({ id, name }) => ({
@@ -35,6 +40,30 @@ export const Apply = () => {
   const onSubmit = (v: ApplicationRequest) => {
     request(dispatch(fetchAddApplication(v))).then(() => onSelectRole(null));
   };
+
+  // if (!matches) {
+  //   return (
+  //     <StyledSwipeableBottomSheet
+  //       overflowHeight={64}
+  //       topShadow={false}
+  //       shadowTip={false}
+  //       scrollTopAtClose
+  //       style={{ zIndex: 2, borderTopLeftRadius: 20, borderTopRightRadius: 20 }}
+  //       bodyStyle={{ borderTopLeftRadius: 20, borderTopRightRadius: 20 }}
+  //     >
+  //       <div
+  //         style={{
+  //           height: '80vh',
+  //           borderTopLeftRadius: 20,
+  //           borderTopRightRadius: 20,
+  //           padding: 10,
+  //         }}
+  //       >
+  //         Here goes the content of your bottom sheet
+  //       </div>
+  //     </StyledSwipeableBottomSheet>
+  //   );
+  // }
 
   return (
     <>
@@ -57,3 +86,13 @@ export const Apply = () => {
     </>
   );
 };
+
+const StyledSwipeableBottomSheet = styled(SwipeableBottomSheet)`
+  .ReactSwipeableBottomSheet--closed,
+  .react-swipeable-view-container {
+    border-radius: 20px !important;
+  }
+  .react-swipeable-view-container {
+    box-shadow: none !important;
+  }
+`;

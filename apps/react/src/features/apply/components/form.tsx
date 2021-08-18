@@ -50,93 +50,110 @@ export const Form: FC<Props> = ({ solats, roleId, onSubmit }) => {
           onSubmit({ ...data, location: [latlng.lng, latlng.lat] });
         })}
       >
-        <FormControl variant="outlined" required>
-          <InputLabel>Solat</InputLabel>
+        <div>
+          <FormControl variant="outlined" required fullWidth>
+            <InputLabel>Solat</InputLabel>
+            <Controller
+              name="solat_id"
+              control={control}
+              render={({ field }) => {
+                return (
+                  <Select native {...field} label="Solat">
+                    {solats.map((v) => (
+                      <option key={v.id} value={v.id}>
+                        {v.name}
+                      </option>
+                    ))}
+                  </Select>
+                );
+              }}
+            />
+          </FormControl>
+        </div>
+
+        <div>
           <Controller
-            name="solat_id"
+            name="huruj_date"
+            rules={{ required: true }}
             control={control}
             render={({ field }) => {
               return (
-                <Select native {...field} label="Solat">
-                  {solats.map((v) => (
-                    <option key={v.id} value={v.id}>
-                      {v.name}
-                    </option>
-                  ))}
-                </Select>
+                <TextField
+                  fullWidth
+                  {...field}
+                  variant="outlined"
+                  label="Date"
+                  type="date"
+                  required
+                />
               );
             }}
           />
-        </FormControl>
+        </div>
 
-        <Controller
-          name="huruj_date"
-          rules={{ required: true }}
-          control={control}
-          render={({ field }) => {
-            return (
+        <div>
+          <Controller
+            name="telegram"
+            control={control}
+            rules={{ required: true }}
+            render={({ field }) => (
               <TextField
+                fullWidth
                 {...field}
+                id="outlined-basic"
+                label="Telegram"
                 variant="outlined"
-                label="Date"
-                type="date"
                 required
               />
-            );
-          }}
-        />
+            )}
+          />
+        </div>
 
-        <Controller
-          name="telegram"
-          control={control}
-          rules={{ required: true }}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              id="outlined-basic"
-              label="Telegram"
-              variant="outlined"
-              required
-            />
-          )}
-        />
-
-        <Controller
-          name="comment"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              id="outlined-basic"
-              label="Comment"
-              variant="outlined"
-            />
-          )}
-        />
-
-        <Controller
-          name="return"
-          control={control}
-          render={({ field }) => {
-            return (
-              <FormControlLabel
-                control={<Checkbox color="primary" {...field} />}
-                label="Return"
+        <div>
+          <Controller
+            name="comment"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                fullWidth
+                {...field}
+                id="outlined-basic"
+                label="Comment"
+                variant="outlined"
               />
-            );
-          }}
-        />
+            )}
+          />
+        </div>
 
-        <Button
-          color="primary"
-          variant="contained"
-          disableElevation
-          disableRipple
-          type="submit"
-          disabled={!latlng.lat || !latlng.lng}
-        >
-          send
-        </Button>
+        <div>
+          <Controller
+            name="return"
+            control={control}
+            render={({ field }) => {
+              return (
+                <FormControlLabel
+
+                  control={<Checkbox color="primary" {...field} />}
+                  label="Return"
+                />
+              );
+            }}
+          />
+        </div>
+
+        <div>
+          <Button
+            fullWidth
+            color="primary"
+            variant="contained"
+            disableElevation
+            disableRipple
+            type="submit"
+            disabled={!latlng.lat || !latlng.lng}
+          >
+            send
+          </Button>
+        </div>
       </StyledForm>
     </>
   );
