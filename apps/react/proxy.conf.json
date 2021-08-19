@@ -1,6 +1,6 @@
 {
   "/api": {
-    "target": "https://www.icatalog.kz",
+    "target": "https://www.masjid.kz",
     "secure": false
   }
 }

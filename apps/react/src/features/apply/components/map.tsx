@@ -10,16 +10,22 @@ import { LatLng } from 'src/models/map.model';
 import { useAppSelector } from 'src/shared/hooks';
 import { environment } from 'src/environments/environment';
 import { isMobile } from 'react-device-detect';
+import { Button } from '@material-ui/core';
 
 type Props = {
   onClick: (arg: LatLng) => void;
 };
 
 export const ApplicationMap: FC<Props> = ({ onClick }) => {
+  const [latlng, setLatLng] = useState<LatLng>();
   const mapContainer = useRef<HTMLDivElement>(null);
 
   const [_map, setMap] = useState(null);
   const { selectedRole } = useAppSelector((s) => s.sharedReducer);
+
+  const setPosition = () => {
+    onClick(latlng);
+  };
 
   const initMap = useMemo(
     () => ({ longitude, latitude }) => {
@@ -42,12 +48,11 @@ export const ApplicationMap: FC<Props> = ({ onClick }) => {
             animate: false,
             zoom: 15,
           },
-          showAccuracyCircle: false,
+          trackUserLocation: true,
+          showUserHeading: true,
+          showAccuracyCircle: true,
         })
       );
-
-      map.addControl(new FullscreenControl());
-      map.addControl(new NavigationControl());
 
       let marker: Marker;
 
@@ -56,7 +61,7 @@ export const ApplicationMap: FC<Props> = ({ onClick }) => {
         selectedRole.id === 1 ? 'fas fa-car fa-3x' : 'fas fa-walking fa-3x';
 
       map.on('click', ({ lngLat }) => {
-        onClick(lngLat);
+        setLatLng(lngLat);
         if (marker) {
           marker.remove();
         }
@@ -95,12 +100,28 @@ export const ApplicationMap: FC<Props> = ({ onClick }) => {
   }, [_map, initMap]);
 
   return (
-    <div
-      ref={mapContainer}
-      style={{
-        height: '100%',
-        width: '100%',
-      }}
-    />
+    <>
+      <div
+        ref={mapContainer}
+        style={{
+          height: '100%',
+          width: '100%',
+        }}
+      />
+      <div
+        style={{ position: 'absolute', bottom: 0, width: '100%', zIndex: 2 }}
+      >
+        <Button
+          variant="contained"
+          disableElevation
+          color="primary"
+          fullWidth
+          disabled={!latlng}
+          onClick={setPosition}
+        >
+          Done
+        </Button>
+      </div>
+    </>
   );
 };

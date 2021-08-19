@@ -8,8 +8,10 @@ const set_solats = 'set_solats';
 const set_selected_role = 'set_selected_role';
 const set_roles = 'set_roles';
 
+export const SELECTED_ROLE = 'SELECTED_ROLE';
+
 interface SelectedRoleSetType extends Action<typeof set_selected_role> {
-  payload: { roleId: number };
+  payload: { roleId: number | null };
 }
 interface RolesSetType extends Action<typeof set_roles> {
   payload: { roles: Role[] };
@@ -44,7 +46,7 @@ type State = {
 const initState: State = {
   solats: [],
   roles: [],
-  selectedRole: null,
+  selectedRole: JSON.parse(localStorage.getItem(SELECTED_ROLE)) || null,
 };
 
 export const sharedReducer = (
@@ -85,3 +87,7 @@ export const fetchRolesThunk = (): AppThunk<Promise<void>> => async (dispatch) =
   const { data } = await axiosInstance.get<Role[]>(`/dict/roles`);
   dispatch(setAllRoles(data));
 };
+
+export const saveSelectedRoleToStorage = (role: Role) => {
+  localStorage.setItem(SELECTED_ROLE, JSON.stringify(role));
+}

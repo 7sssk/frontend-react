@@ -8,21 +8,20 @@ import { store } from './redux/store';
 import { Provider } from 'react-redux';
 import { ThemeProvider as MAterialThemeProvider } from '@material-ui/core';
 import { theme } from './theme/material-theme';
+import { OverlayProvider } from '@react-aria/overlays';
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
   .fas, .fab {
-    color: ${theme.palette.primary.main} !important;
+    color: ${theme.palette.primary.main};
   }
 `;
 
 ReactDOM.render(
   <Provider store={store}>
     <MAterialThemeProvider theme={theme}>
-      <>
-        <GlobalStyle />
-        <App />
-      </>
+      <GlobalStyle />
+      <App />
     </MAterialThemeProvider>
   </Provider>,
   document.getElementById('root')

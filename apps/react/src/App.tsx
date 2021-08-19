@@ -18,7 +18,7 @@ function App() {
   useEffect(() => {
     request(
       Promise.all([
-        dispatch(fetchApplicationsThunk),
+        dispatch(fetchApplicationsThunk()),
         dispatch(fetchSolatsThunk()),
         dispatch(fetchRolesThunk()),
       ])

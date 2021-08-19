@@ -39,11 +39,11 @@ export const Form: FC<Props> = ({ solats, roleId, onSubmit }) => {
 
   return (
     <>
-      <div style={{ width: '100%', height: 300, marginBottom: 20 }}>
+      {/* <div style={{ width: '100%', height: 300, marginBottom: 20 }}>
         <ApplicationMap onClick={setLatlng} />
       </div>
 
-      <Divider />
+      <Divider /> */}
 
       <StyledForm
         onSubmit={handleSubmit((data) => {
@@ -164,7 +164,6 @@ export const Form: FC<Props> = ({ solats, roleId, onSubmit }) => {
 const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
-  padding: 15px;
   & > * {
     margin-bottom: 5px !important;
     margin-top: 5px !important;
