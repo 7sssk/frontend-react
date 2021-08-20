@@ -20,9 +20,10 @@ type Props = {
   solats: Solat[];
   roleId: number;
   onSubmit: (v: ApplicationRequest) => void;
+  latlng: LatLng;
 };
 
-export const Form: FC<Props> = ({ solats, roleId, onSubmit }) => {
+export const Form: FC<Props> = ({ solats, roleId, latlng, onSubmit }) => {
   const { handleSubmit, control, formState } = useForm<ApplicationRequest>({
     defaultValues: {
       location: [],
@@ -35,7 +36,7 @@ export const Form: FC<Props> = ({ solats, roleId, onSubmit }) => {
     },
   });
 
-  const [latlng, setLatlng] = useState<LatLng>({ lat: null, lng: null });
+  // const [latlng, setLatlng] = useState<LatLng>({ lat: null, lng: null });
 
   return (
     <>
@@ -71,7 +72,7 @@ export const Form: FC<Props> = ({ solats, roleId, onSubmit }) => {
           </FormControl>
         </div>
 
-        <div>
+        {/* <div>
           <Controller
             name="huruj_date"
             rules={{ required: true }}
@@ -92,7 +93,7 @@ export const Form: FC<Props> = ({ solats, roleId, onSubmit }) => {
               );
             }}
           />
-        </div>
+        </div> */}
 
         <div>
           <Controller
@@ -151,7 +152,7 @@ export const Form: FC<Props> = ({ solats, roleId, onSubmit }) => {
             disableElevation
             disableRipple
             type="submit"
-            disabled={!latlng.lat || !latlng.lng}
+            disabled={!latlng && !formState.isValid}
           >
             send
           </Button>

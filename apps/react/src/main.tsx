@@ -8,7 +8,7 @@ import { store } from './redux/store';
 import { Provider } from 'react-redux';
 import { ThemeProvider as MAterialThemeProvider } from '@material-ui/core';
 import { theme } from './theme/material-theme';
-import { OverlayProvider } from '@react-aria/overlays';
+import { IconContext } from 'react-icons';
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
@@ -20,8 +20,12 @@ const GlobalStyle = createGlobalStyle`
 ReactDOM.render(
   <Provider store={store}>
     <MAterialThemeProvider theme={theme}>
-      <GlobalStyle />
-      <App />
+      <IconContext.Provider
+        value={{ color: theme.palette.primary.main, size: '1em' }}
+      >
+        <GlobalStyle />
+        <App />
+      </IconContext.Provider>
     </MAterialThemeProvider>
   </Provider>,
   document.getElementById('root')

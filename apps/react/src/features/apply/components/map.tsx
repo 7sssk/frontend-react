@@ -1,22 +1,19 @@
 import { FC, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  Map,
-  GeolocateControl,
-  FullscreenControl,
-  NavigationControl,
-  Marker,
-} from 'mapbox-gl';
+import { Map, GeolocateControl, Marker } from 'mapbox-gl';
 import { LatLng } from 'src/models/map.model';
 import { useAppSelector } from 'src/shared/hooks';
 import { environment } from 'src/environments/environment';
 import { isMobile } from 'react-device-detect';
-import { Button } from '@material-ui/core';
+import { Button, IconButton } from '@material-ui/core';
+import { IoMdArrowRoundBack } from 'react-icons/io';
+import { theme } from 'src/theme/material-theme';
 
 type Props = {
   onClick: (arg: LatLng) => void;
+  onClose: () => void;
 };
 
-export const ApplicationMap: FC<Props> = ({ onClick }) => {
+export const ApplicationMap: FC<Props> = ({ onClick, onClose }) => {
   const [latlng, setLatLng] = useState<LatLng>();
   const mapContainer = useRef<HTMLDivElement>(null);
 
@@ -54,18 +51,22 @@ export const ApplicationMap: FC<Props> = ({ onClick }) => {
         })
       );
 
-      let marker: Marker;
+      // const el = document.createElement('div');
+      // el.className =
+      //   selectedRole.id === 1 ? 'fas fa-car fa-3x' : 'fas fa-walking fa-3x';
 
-      const el = document.createElement('div');
-      el.className =
-        selectedRole.id === 1 ? 'fas fa-car fa-3x' : 'fas fa-walking fa-3x';
+      let marker = new Marker({ color: theme.palette.primary.main });
+
+      navigator.geolocation.getCurrentPosition(({ coords }) => {
+        const { latitude, longitude } = coords;
+        setLatLng({ lat: latitude, lng: longitude });
+        marker.setLngLat({ lat: latitude, lng: longitude }).addTo(map);
+      });
 
       map.on('click', ({ lngLat }) => {
         setLatLng(lngLat);
-        if (marker) {
-          marker.remove();
-        }
-        marker = new Marker(el).setLngLat(lngLat).addTo(map);
+        marker.remove();
+        marker.setLngLat(lngLat).addTo(map);
       });
 
       setMap(map);
@@ -109,7 +110,28 @@ export const ApplicationMap: FC<Props> = ({ onClick }) => {
         }}
       />
       <div
-        style={{ position: 'absolute', bottom: 0, width: '100%', zIndex: 2 }}
+        style={{
+          background: '#fff',
+          position: 'absolute',
+          left: 20,
+          top: 20,
+          borderRadius: 50,
+        }}
+      >
+        <IconButton color="primary" onClick={onClose}>
+          <IoMdArrowRoundBack />
+        </IconButton>
+      </div>
+      <div
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          width: '100%',
+          zIndex: 2,
+          background: '#fff',
+          paddingTop: 7,
+          paddingBottom: 7,
+        }}
       >
         <Button
           variant="contained"

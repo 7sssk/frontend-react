@@ -3,27 +3,20 @@ import {
   saveSelectedRoleToStorage,
   setSelectedRoleAction,
 } from 'src/redux';
-import { SpeedDials, SpeedDialsAction } from 'src/shared/components/fab';
 import { useAppDispatch, useAppSelector } from 'src/shared/hooks';
-import {
-  Button,
-  Dialog,
-  Divider,
-  useMediaQuery,
-  useTheme,
-} from '@material-ui/core';
-import { useMemo, useRef, useState, useEffect } from 'react';
-import { RoleIcon } from 'src/shared/components/role-icon';
+import { Button, Dialog, useMediaQuery, useTheme } from '@material-ui/core';
+import { useState } from 'react';
 import { Form } from './components/form';
 import SwipeableBottomSheet from 'react-swipeable-bottom-sheet';
 
 import { ApplicationRequest } from 'src/models/applications';
-import { TMSDialogTitle } from 'src/shared/components/dialog-title';
 import { useRequest } from 'use-promise-request';
 import { Loader } from 'src/shared/styled/loader';
 import styled from 'styled-components';
 import { ApplicationMap } from './components/map';
 import { LatLng } from 'src/models/map.model';
+import { FaMapMarkedAlt } from 'react-icons/fa';
+import { PropTypes } from '@material-ui/core';
 
 export const Apply = () => {
   const theme = useTheme();
@@ -35,25 +28,30 @@ export const Apply = () => {
 
   const { request, loading } = useRequest();
 
-  const actions = useMemo<SpeedDialsAction[]>(() => {
-    return roles.map(({ id, name }) => ({
-      icon: <RoleIcon roleId={id} />,
-      name,
-      roleId: id,
-    }));
-  }, [roles]);
+  // const actions = useMemo<SpeedDialsAction[]>(() => {
+  //   return roles.map(({ id, name }) => ({
+  //     icon: <RoleIcon roleId={id} />,
+  //     name,
+  //     roleId: id,
+  //   }));
+  // }, [roles]);
 
   const onSelectRole = (roleId: number) => {
-    saveSelectedRoleToStorage(roles.find((roles) => roles.id === roleId));
+    saveSelectedRoleToStorage(roleId);
     dispatch(setSelectedRoleAction(roleId));
   };
 
   const onSubmit = (v: ApplicationRequest) => {
-    request(dispatch(fetchAddApplication(v))).then(() => onSelectRole(null));
+    request(dispatch(fetchAddApplication(v))).then(() => {
+      setOpen(false);
+    });
   };
+
+  const [buttonColor, setButtonColor] = useState<PropTypes.Color>('primary');
 
   const [isOpen, setOpen] = useState(false);
   const onToggleSheet = () => {
+    setButtonColor(isOpen ? 'primary' : 'default');
     setOpen(!isOpen);
   };
 
@@ -61,7 +59,6 @@ export const Apply = () => {
   const [selectedPosition, setSelectedPosition] = useState<LatLng>();
 
   const onSelectPosition = (v: LatLng) => {
-    console.log('🚀 ~ file: apply.tsx ~ line 64 ~ onSelectPosition ~ v', v);
     setSelectedPosition(v);
     setMapDialogOpen(false);
   };
@@ -78,6 +75,7 @@ export const Apply = () => {
         bodyStyle={{ borderTopLeftRadius: 20, borderTopRightRadius: 20 }}
         onChange={onToggleSheet}
       >
+        <Loader loading={loading} />
         <div
           style={{
             paddingLeft: 10,
@@ -98,7 +96,7 @@ export const Apply = () => {
             <div className="col-xs-12">
               <Button
                 variant="contained"
-                color="primary"
+                color={buttonColor}
                 fullWidth
                 disableElevation
                 disableRipple
@@ -108,47 +106,56 @@ export const Apply = () => {
               </Button>
             </div>
           </div>
-          <div className="row around-xs" style={{ marginTop: 10 }}>
+          <div className="row" style={{ marginTop: 10 }}>
+            <div className="col-xs-12">
+              <small>Вы на машине или пешком?</small>
+            </div>
+          </div>
+          <div className="row around-xs">
             {roles.map((role) => (
               <div className="col-xs-6" key={role.id.toString()}>
                 <Button
-                  variant="outlined"
+                  variant={selectedRole?.id === role.id ? 'outlined' : 'text'}
                   disableElevation
                   disableRipple
                   fullWidth
-                  color="primary"
+                  color={selectedRole?.id === role.id ? 'primary' : 'default'}
                   onClick={onSelectRole.bind(null, role.id)}
                 >
-                  <RoleIcon roleId={role.id} />
+                  {role.name_ru}
                 </Button>
               </div>
             ))}
           </div>
 
-          {selectedRole?.id && (
-            <div>
-              <div className="row" style={{ marginTop: 10 }}>
-                <div className="col-xs-8 col-sm-4">
-                  <Button
-                    fullWidth
-                    variant="contained"
-                    onClick={setMapDialogOpen.bind(null, true)}
-                  >
-                    Select your position
-                  </Button>
-                </div>
-              </div>
-              <div className="row" style={{ marginTop: 10 }}>
-                <div className="col-xs-12">
-                  <Form
-                    solats={solats}
-                    roleId={selectedRole.id}
-                    onSubmit={onSubmit}
-                  />
-                </div>
+          <div>
+            <div className="row" style={{ marginTop: 10 }}>
+              <div className="col-xs-8 col-sm-4">
+                <Button
+                  fullWidth
+                  variant="contained"
+                  onClick={setMapDialogOpen.bind(null, true)}
+                >
+                  Select your position &nbsp; <FaMapMarkedAlt />
+                </Button>
+                {!selectedPosition && (
+                  <small style={{ color: 'red' }}>
+                    Please pick you location
+                  </small>
+                )}
               </div>
             </div>
-          )}
+            <div className="row" style={{ marginTop: 10 }}>
+              <div className="col-xs-12">
+                <Form
+                  solats={solats}
+                  roleId={selectedRole?.id}
+                  latlng={selectedPosition}
+                  onSubmit={onSubmit}
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </StyledSwipeableBottomSheet>
 
@@ -157,7 +164,10 @@ export const Apply = () => {
         onClose={setMapDialogOpen.bind(null, false)}
         fullScreen
       >
-        <ApplicationMap onClick={onSelectPosition} />
+        <ApplicationMap
+          onClose={setMapDialogOpen.bind(null, false)}
+          onClick={onSelectPosition}
+        />
       </Dialog>
     </>
   );

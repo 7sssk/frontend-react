@@ -5,9 +5,5 @@ export const RoleIcon: React.FC<{ roleId: number }> = ({ roleId }) => {
     return <div></div>;
   }
 
-  return roleId === 1 ? (
-    <i className="fas fa-car fa-2x"></i>
-  ) : (
-    <i className="fas fa-walking fa-2x"></i>
-  );
+  return roleId === 1 ? <FaCar size="1em" /> : <FaWalking />;
 };
