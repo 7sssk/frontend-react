@@ -7,6 +7,8 @@ import { Map, Marker, Popup } from 'mapbox-gl';
 
 const set_map = 'set_map';
 
+export const SET_USER_TELEGRAM = 'SET_USER_TELEGRAM';
+
 interface AppMapSetType extends Action<typeof set_map> {
   payload: { map: Map };
 }
@@ -62,16 +64,16 @@ export const fetchApplicationsThunk = (): AppThunk<Promise<void>> => async (
         `
         <div>
           <h4>${getState().sharedReducer.solats.find(({ id }) => id === solat_id)
-          ?.name
+          ?.name.toUpperCase()
         }</h4>
         </div>
         
         <div>
-          <a href="tg://resolve?domain=${item.telegram}">Telegram</a>
+          <h4><a href="tg://resolve?domain=${item.telegram}">Telegram</a></h4>
         </div>
         
         <div>
-          <a>Return: ${item.return ? 'Yes' : 'No'}</a>
+          <a>Вернусь: ${item.return ? 'Да' : 'Нет'}</a>
         </div>
         `
       );
@@ -85,6 +87,9 @@ export const fetchApplicationsThunk = (): AppThunk<Promise<void>> => async (
 export const fetchAddApplication = (
   newApplication: ApplicationRequest
 ): AppThunk<Promise<Application>> => async (dispatch) => {
+
+  localStorage.setItem(SET_USER_TELEGRAM, newApplication.telegram);
+
   const { data } = await axiosInstance.post<Application>(
     '/applications',
     newApplication

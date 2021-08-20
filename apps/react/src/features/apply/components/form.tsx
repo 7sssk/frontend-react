@@ -13,6 +13,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { ApplicationRequest } from 'src/models/applications';
 import { LatLng } from 'src/models/map.model';
 import { Solat } from 'src/models/solat';
+import { SET_USER_TELEGRAM } from 'src/redux';
 import styled from 'styled-components';
 import { ApplicationMap } from './map';
 
@@ -30,7 +31,7 @@ export const Form: FC<Props> = ({ solats, roleId, latlng, onSubmit }) => {
       comment: '',
       return: false,
       solat_id: 1,
-      telegram: '',
+      telegram: localStorage.getItem(SET_USER_TELEGRAM) || '',
       role_id: roleId,
       huruj_date: '',
     },
@@ -53,7 +54,7 @@ export const Form: FC<Props> = ({ solats, roleId, latlng, onSubmit }) => {
       >
         <div>
           <FormControl variant="outlined" required fullWidth>
-            <InputLabel>Solat</InputLabel>
+            <InputLabel>Намаз</InputLabel>
             <Controller
               name="solat_id"
               control={control}
@@ -122,7 +123,7 @@ export const Form: FC<Props> = ({ solats, roleId, latlng, onSubmit }) => {
                 fullWidth
                 {...field}
                 id="outlined-basic"
-                label="Comment"
+                label="Коментарии"
                 variant="outlined"
               />
             )}
@@ -137,7 +138,7 @@ export const Form: FC<Props> = ({ solats, roleId, latlng, onSubmit }) => {
               return (
                 <FormControlLabel
                   control={<Checkbox color="primary" {...field} />}
-                  label="Return"
+                  label="Вернетесь назад?"
                 />
               );
             }}
@@ -152,9 +153,9 @@ export const Form: FC<Props> = ({ solats, roleId, latlng, onSubmit }) => {
             disableElevation
             disableRipple
             type="submit"
-            disabled={!latlng && !formState.isValid}
+            disabled={!latlng}
           >
-            send
+            Отправить
           </Button>
         </div>
       </StyledForm>

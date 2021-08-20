@@ -102,20 +102,20 @@ export const Apply = () => {
                 disableRipple
                 onClick={onToggleSheet}
               >
-                To Masjid?
+                Намаз в Мечети?
               </Button>
             </div>
           </div>
           <div className="row" style={{ marginTop: 10 }}>
             <div className="col-xs-12">
-              <small>Вы на машине или пешком?</small>
+              <small>На машине или пешком?</small>
             </div>
           </div>
           <div className="row around-xs">
             {roles.map((role) => (
               <div className="col-xs-6" key={role.id.toString()}>
                 <Button
-                  variant={selectedRole?.id === role.id ? 'outlined' : 'text'}
+                  variant={getRoleSelectBtnVariant(selectedRole?.id, role.id)}
                   disableElevation
                   disableRipple
                   fullWidth
@@ -134,15 +134,13 @@ export const Apply = () => {
                 <Button
                   fullWidth
                   variant="contained"
+                  disableElevation
+                  disableRipple
+                  color={!selectedPosition ? 'secondary' : 'default'}
                   onClick={setMapDialogOpen.bind(null, true)}
                 >
-                  Select your position &nbsp; <FaMapMarkedAlt />
+                  Укажите где вы &nbsp; <FaMapMarkedAlt />
                 </Button>
-                {!selectedPosition && (
-                  <small style={{ color: 'red' }}>
-                    Please pick you location
-                  </small>
-                )}
               </div>
             </div>
             <div className="row" style={{ marginTop: 10 }}>
@@ -203,3 +201,14 @@ const StyledSwipeableBottomSheet = styled(SwipeableBottomSheet)`
     box-shadow: none !important;
   }
 `;
+
+const getRoleSelectBtnVariant = (
+  selectedRoleId: number,
+  roleId: number
+): 'text' | 'outlined' | 'contained' => {
+  if (!selectedRoleId) {
+    return 'outlined';
+  }
+
+  return selectedRoleId === roleId ? 'outlined' : 'text';
+};

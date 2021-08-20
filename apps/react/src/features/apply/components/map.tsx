@@ -5,7 +5,7 @@ import { useAppSelector } from 'src/shared/hooks';
 import { environment } from 'src/environments/environment';
 import { isMobile } from 'react-device-detect';
 import { Button, IconButton } from '@material-ui/core';
-import { IoMdArrowRoundBack } from 'react-icons/io';
+import { IoMdClose } from 'react-icons/io';
 import { theme } from 'src/theme/material-theme';
 
 type Props = {
@@ -119,7 +119,7 @@ export const ApplicationMap: FC<Props> = ({ onClick, onClose }) => {
         }}
       >
         <IconButton color="primary" onClick={onClose}>
-          <IoMdArrowRoundBack />
+          <IoMdClose size="1.4em" />
         </IconButton>
       </div>
       <div
@@ -141,7 +141,7 @@ export const ApplicationMap: FC<Props> = ({ onClick, onClose }) => {
           disabled={!latlng}
           onClick={setPosition}
         >
-          Done
+          Готово
         </Button>
       </div>
     </>
