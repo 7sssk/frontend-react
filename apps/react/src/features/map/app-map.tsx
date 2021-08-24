@@ -8,7 +8,7 @@ import {
 import { useAppDispatch, useAppSelector } from 'src/shared/hooks';
 import { fetchApplicationsThunk, setAppMapAction } from 'src/redux';
 import { environment } from 'src/environments/environment';
-import { isMobile } from 'react-device-detect'
+import { isMobile } from 'react-device-detect';
 
 export const AppMap = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
@@ -45,14 +45,6 @@ export const AppMap = () => {
       map.addControl(new FullscreenControl());
       map.addControl(new NavigationControl());
 
-      map.on('mouseenter', 'places', () => {
-        map.getCanvas().style.cursor = 'pointer';
-      });
-
-      map.on('mouseleave', 'places', () => {
-        map.getCanvas().style.cursor = '';
-      });
-
       dispatch(setAppMapAction(map));
       dispatch(fetchApplicationsThunk());
     },
@@ -63,7 +55,6 @@ export const AppMap = () => {
     if (appMapState.map) {
       return;
     }
-
 
     if (!environment.production && isMobile) {
       initMap({

@@ -4,6 +4,7 @@ import { Application, ApplicationRequest } from 'src/models/applications';
 import { axiosInstance } from 'src/shared/axios-instance';
 import { AppThunk } from './store';
 import { Map, Marker, Popup } from 'mapbox-gl';
+import { theme } from 'src/theme/material-theme';
 
 const set_map = 'set_map';
 
@@ -58,9 +59,9 @@ export const fetchApplicationsThunk = (): AppThunk<Promise<void>> => async (
 
       const el = document.createElement('div');
       el.className =
-        role_id === 1 ? 'fas fa-car fa-3x' : 'fas fa-walking fa-3x';
+        role_id === 1 ? 'fas fa-car fa-3x primary' : 'fas fa-walking fa-3x primary';
 
-      const popup = new Popup({ offset: 25 }).setHTML(
+      const popup = new Popup({ offset: 25, focusAfterOpen: true, closeButton: false }).setHTML(
         `
         <div>
           <h4>${getState().sharedReducer.solats.find(({ id }) => id === solat_id)
@@ -78,7 +79,7 @@ export const fetchApplicationsThunk = (): AppThunk<Promise<void>> => async (
         `
       );
 
-      new Marker(el).setLngLat({ lat, lng }).setPopup(popup).addTo(map);
+      new Marker({element: el}).setLngLat({ lat, lng }).setPopup(popup).addTo(map);
     });
   } catch (error) {
   }

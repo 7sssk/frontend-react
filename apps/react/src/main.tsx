@@ -12,8 +12,8 @@ import { IconContext } from 'react-icons';
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
-  .fas, .fab {
-    color: ${theme.palette.primary.main};
+  .primary {
+    color: ${theme.palette.primary.main}
   }
 `;
 

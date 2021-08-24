@@ -10,6 +10,7 @@ import {
   fetchSolatsThunk,
 } from './redux';
 import { useRequest } from 'use-promise-request';
+import { SwipeDrawer } from './features/swipeable-drawer';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -29,6 +30,7 @@ function App() {
     <Div100vh>
       <Loader loading={loading} />
       <AppMap />
+      <SwipeDrawer />
 
       {!loading && (
         <>

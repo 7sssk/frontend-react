@@ -106,7 +106,7 @@ export const Form: FC<Props> = ({ solats, roleId, latlng, onSubmit }) => {
                 fullWidth
                 {...field}
                 id="outlined-basic"
-                label="Telegram"
+                label="Telegram для связи с вами"
                 variant="outlined"
                 required
               />
@@ -145,7 +145,7 @@ export const Form: FC<Props> = ({ solats, roleId, latlng, onSubmit }) => {
           />
         </div>
 
-        <div>
+        <div style={{ marginBottom: 20 }}>
           <Button
             fullWidth
             color="primary"
@@ -155,7 +155,7 @@ export const Form: FC<Props> = ({ solats, roleId, latlng, onSubmit }) => {
             type="submit"
             disabled={!latlng}
           >
-            Отправить
+            В Мечеть
           </Button>
         </div>
       </StyledForm>
@@ -167,8 +167,7 @@ const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
   & > * {
-    margin-bottom: 5px !important;
-    margin-top: 5px !important;
+    margin-top: 10px !important;
   }
   overflow-y: auto;
 `;

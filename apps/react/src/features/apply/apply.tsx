@@ -51,6 +51,8 @@ export const Apply = () => {
 
   const [isOpen, setOpen] = useState(false);
   const onToggleSheet = () => {
+    const root = document.getElementById('root');
+    root.style.marginTop = !isOpen ? '12px' : '0px';
     setButtonColor(isOpen ? 'primary' : 'default');
     setOpen(!isOpen);
   };
@@ -67,7 +69,7 @@ export const Apply = () => {
     <>
       <StyledSwipeableBottomSheet
         open={isOpen}
-        overflowHeight={65}
+        overflowHeight={70}
         topShadow={false}
         shadowTip={false}
         scrollTopAtClose
@@ -136,10 +138,11 @@ export const Apply = () => {
                   variant="contained"
                   disableElevation
                   disableRipple
-                  color={!selectedPosition ? 'secondary' : 'default'}
+                  color={!selectedPosition ? 'primary' : 'default'}
+                  endIcon={<FaMapMarkedAlt color="#FFF" />}
                   onClick={setMapDialogOpen.bind(null, true)}
                 >
-                  Укажите где вы &nbsp; <FaMapMarkedAlt />
+                  Укажите где вы
                 </Button>
               </div>
             </div>
@@ -169,27 +172,6 @@ export const Apply = () => {
       </Dialog>
     </>
   );
-
-  // return (
-  //   <>
-  //     <SpeedDials actions={actions} onSelectRole={onSelectRole} />
-  //     {selectedRole && (
-  //       <Dialog
-  //         open={!!selectedRole}
-  //         onClose={onSelectRole.bind(null, null)}
-  //         fullWidth
-  //         fullScreen={!matches}
-  //       >
-  //         <Loader loading={loading} />
-  //         <TMSDialogTitle onClose={onSelectRole.bind(null, null)}>
-  //           <RoleIcon roleId={selectedRole.id} />
-  //         </TMSDialogTitle>
-
-  //         <Form solats={solats} roleId={selectedRole.id} onSubmit={onSubmit} />
-  //       </Dialog>
-  //     )}
-  //   </>
-  // );
 };
 
 const StyledSwipeableBottomSheet = styled(SwipeableBottomSheet)`
