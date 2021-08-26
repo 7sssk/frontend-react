@@ -6,13 +6,14 @@ import {
   SwipeableDrawer,
 } from '@material-ui/core';
 import { useState } from 'react';
+import { BsInfoCircle } from 'react-icons/bs';
 import { FaHamburger, FaTelegramPlane } from 'react-icons/fa';
 import { IoMdShare } from 'react-icons/io';
-
-// import Logo from '/assets/pwa/ios_splash/iphone5_splash.png';
+import { InfoDialog } from './info-dialog';
 
 export const SwipeDrawer = () => {
   const [open, setOpen] = useState(false);
+  const [infoDialog, openInfoDialog] = useState(false);
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -20,6 +21,17 @@ export const SwipeDrawer = () => {
 
   const onShare = () => {
     //  TODO
+  };
+
+  const toggleInfoDialog = () => {
+    openInfoDialog(!infoDialog);
+  };
+
+  const openTelegram = () => {
+    const el = document.createElement('a');
+    el.href = 'https://t.me/masjidqa';
+    el.target = '_blank';
+    el.click();
   };
 
   return (
@@ -59,17 +71,23 @@ export const SwipeDrawer = () => {
 
           <Divider />
 
-          <Button fullWidth startIcon={<FaTelegramPlane />}>
-            <Link href="tg://resolve?domain=masjidqa"></Link>
+          <Button fullWidth onClick={openTelegram}>
+            <FaTelegramPlane size="1.5em">
+              <Link href="tg://resolve?domain=masjidqa">QA</Link>
+            </FaTelegramPlane>
           </Button>
 
-          <Button
-            fullWidth
-            startIcon={<IoMdShare />}
-            onClick={onShare}
-          ></Button>
+          <Button fullWidth onClick={onShare}>
+            <IoMdShare size="1.5em" />
+          </Button>
+
+          <Button fullWidth onClick={toggleInfoDialog}>
+            <BsInfoCircle size="1.5em" />
+          </Button>
         </div>
       </SwipeableDrawer>
+
+      <InfoDialog open={infoDialog} onClose={toggleInfoDialog} />
     </>
   );
 };

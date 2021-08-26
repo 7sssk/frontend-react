@@ -19,7 +19,6 @@ export interface Location {
 export interface ApplicationRequest {
   role_id: number;
   telegram: string;
-  huruj_date: string;
   solat_id: number;
   return: boolean;
   comment: string;

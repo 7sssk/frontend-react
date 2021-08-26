@@ -70,7 +70,7 @@ export const fetchApplicationsThunk = (): AppThunk<Promise<void>> => async (
         </div>
         
         <div>
-          <h4><a href="tg://resolve?domain=${item.telegram}">Telegram</a></h4>
+          <h4><a href="https://t.me/${item.telegram}" target="_blank">Telegram</a></h4>
         </div>
         
         <div>

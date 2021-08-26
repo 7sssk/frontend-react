@@ -4,7 +4,7 @@ import {
   setSelectedRoleAction,
 } from 'src/redux';
 import { useAppDispatch, useAppSelector } from 'src/shared/hooks';
-import { Button, Dialog, useMediaQuery, useTheme } from '@material-ui/core';
+import { Button, Dialog } from '@material-ui/core';
 import { useState } from 'react';
 import { Form } from './components/form';
 import SwipeableBottomSheet from 'react-swipeable-bottom-sheet';
@@ -19,22 +19,11 @@ import { FaMapMarkedAlt } from 'react-icons/fa';
 import { PropTypes } from '@material-ui/core';
 
 export const Apply = () => {
-  const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up('sm'));
-
   const dispatch = useAppDispatch();
   const { selectedRole, roles } = useAppSelector((s) => s.sharedReducer);
   const { solats } = useAppSelector((s) => s.sharedReducer);
 
   const { request, loading } = useRequest();
-
-  // const actions = useMemo<SpeedDialsAction[]>(() => {
-  //   return roles.map(({ id, name }) => ({
-  //     icon: <RoleIcon roleId={id} />,
-  //     name,
-  //     roleId: id,
-  //   }));
-  // }, [roles]);
 
   const onSelectRole = (roleId: number) => {
     saveSelectedRoleToStorage(roleId);
@@ -52,7 +41,7 @@ export const Apply = () => {
   const [isOpen, setOpen] = useState(false);
   const onToggleSheet = () => {
     const root = document.getElementById('root');
-    root.style.marginTop = !isOpen ? '12px' : '0px';
+    root.style.marginTop = !isOpen ? '13px' : '0px';
     setButtonColor(isOpen ? 'primary' : 'default');
     setOpen(!isOpen);
   };

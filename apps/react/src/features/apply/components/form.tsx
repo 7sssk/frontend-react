@@ -6,16 +6,14 @@ import {
   Select,
   Button,
   TextField,
-  Divider,
 } from '@material-ui/core';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { ApplicationRequest } from 'src/models/applications';
 import { LatLng } from 'src/models/map.model';
 import { Solat } from 'src/models/solat';
 import { SET_USER_TELEGRAM } from 'src/redux';
 import styled from 'styled-components';
-import { ApplicationMap } from './map';
 
 type Props = {
   solats: Solat[];
@@ -25,7 +23,7 @@ type Props = {
 };
 
 export const Form: FC<Props> = ({ solats, roleId, latlng, onSubmit }) => {
-  const { handleSubmit, control, formState } = useForm<ApplicationRequest>({
+  const { handleSubmit, control } = useForm<ApplicationRequest>({
     defaultValues: {
       location: [],
       comment: '',
@@ -33,7 +31,6 @@ export const Form: FC<Props> = ({ solats, roleId, latlng, onSubmit }) => {
       solat_id: 1,
       telegram: localStorage.getItem(SET_USER_TELEGRAM) || '',
       role_id: roleId,
-      huruj_date: '',
     },
   });
 
