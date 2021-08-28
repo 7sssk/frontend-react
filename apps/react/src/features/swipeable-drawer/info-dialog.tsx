@@ -25,7 +25,7 @@ export const InfoDialog: FC<Props> = ({ open, onClose }) => {
         </DialogTitle>
         <DialogContent style={{ textAlign: 'center' }}>
           <Typography component="h5" variant="h5">
-            Бесплатное приложение с открытым исходным{' '}
+            Абсолютно бесплатное приложение с открытым исходным{' '}
             <Typography
               component="a"
               variant="h5"
@@ -33,10 +33,10 @@ export const InfoDialog: FC<Props> = ({ open, onClose }) => {
             >
               кодом
             </Typography>{' '}
-            и всегда без рекламы
+            помогает тысячам мусульманам совершать намазы в мечети
           </Typography>
           <Typography component="h1">
-            made in <b>Qazaqstan</b>
+            made by <i>Bratya</i>
           </Typography>
         </DialogContent>
       </Dialog>

@@ -70,7 +70,12 @@ export const fetchApplicationsThunk = (): AppThunk<Promise<void>> => async (
         </div>
         
         <div>
-          <h4><a href="https://t.me/${item.telegram}" target="_blank">Telegram</a></h4>
+          <h4>
+            <a href="https://t.me/${item.telegram}" target="_blank">
+              <i class="fab fa-telegram-plane"></i>
+              ${item.telegram}
+            </a>
+          </h4>
         </div>
         
         <div>
@@ -79,7 +84,7 @@ export const fetchApplicationsThunk = (): AppThunk<Promise<void>> => async (
         `
       );
 
-      new Marker({element: el}).setLngLat({ lat, lng }).setPopup(popup).addTo(map);
+      new Marker({element: el, }).setLngLat({ lat, lng }).setPopup(popup).addTo(map);
     });
   } catch (error) {
   }

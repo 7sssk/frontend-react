@@ -32,7 +32,7 @@ export const Apply = () => {
 
   const onSubmit = (v: ApplicationRequest) => {
     request(dispatch(fetchAddApplication(v))).then(() => {
-      setOpen(false);
+      onToggleSheet();
     });
   };
 

@@ -77,9 +77,9 @@ export const SwipeDrawer = () => {
             </FaTelegramPlane>
           </Button>
 
-          <Button fullWidth onClick={onShare}>
+          {/* <Button fullWidth onClick={onShare}>
             <IoMdShare size="1.5em" />
-          </Button>
+          </Button> */}
 
           <Button fullWidth onClick={toggleInfoDialog}>
             <BsInfoCircle size="1.5em" />
