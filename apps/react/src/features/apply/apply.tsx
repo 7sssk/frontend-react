@@ -1,10 +1,10 @@
 import {
   fetchAddApplication,
-  saveSelectedRoleToStorage,
+  // saveSelectedRoleToStorage,
   setSelectedRoleAction,
 } from 'src/redux';
 import { useAppDispatch, useAppSelector } from 'src/shared/hooks';
-import { Button, Dialog } from '@material-ui/core';
+import { Button, Dialog, useTheme } from '@material-ui/core';
 import { useState } from 'react';
 import { Form } from './components/form';
 import SwipeableBottomSheet from 'react-swipeable-bottom-sheet';
@@ -15,10 +15,13 @@ import { Loader } from 'src/shared/styled/loader';
 import styled from 'styled-components';
 import { ApplicationMap } from './components/map';
 import { LatLng } from 'src/models/map.model';
-import { FaMapMarkedAlt } from 'react-icons/fa';
+import { FaMapMarkedAlt, FaMinus } from 'react-icons/fa';
 import { PropTypes } from '@material-ui/core';
+import { IoReorderTwoOutline } from 'react-icons/io5';
+import { DisabledContainer } from 'src/shared/components/disabled';
 
 export const Apply = () => {
+  const { palette } = useTheme();
   const dispatch = useAppDispatch();
   const { selectedRole, roles } = useAppSelector((s) => s.sharedReducer);
   const { solats } = useAppSelector((s) => s.sharedReducer);
@@ -26,7 +29,7 @@ export const Apply = () => {
   const { request, loading } = useRequest();
 
   const onSelectRole = (roleId: number) => {
-    saveSelectedRoleToStorage(roleId);
+    // saveSelectedRoleToStorage(roleId);
     dispatch(setSelectedRoleAction(roleId));
   };
 
@@ -58,7 +61,7 @@ export const Apply = () => {
     <>
       <StyledSwipeableBottomSheet
         open={isOpen}
-        overflowHeight={70}
+        overflowHeight={75}
         topShadow={false}
         shadowTip={false}
         scrollTopAtClose
@@ -83,7 +86,7 @@ export const Apply = () => {
               ></i>
             </div>
           </div>
-          <div className="row">
+          <div className="row" style={{ marginBottom: 20 }}>
             <div className="col-xs-12">
               <Button
                 variant="contained"
@@ -97,11 +100,15 @@ export const Apply = () => {
               </Button>
             </div>
           </div>
-          <div className="row" style={{ marginTop: 10 }}>
-            <div className="col-xs-12">
-              <small>На машине или пешком?</small>
+          {!selectedRole && (
+            <div className="row">
+              <div className="col-xs-12">
+                <small style={{ color: palette.secondary.main }}>
+                  На машине или пешком?
+                </small>
+              </div>
             </div>
-          </div>
+          )}
           <div className="row around-xs">
             {roles.map((role) => (
               <div className="col-xs-6" key={role.id.toString()}>
@@ -119,7 +126,7 @@ export const Apply = () => {
             ))}
           </div>
 
-          <div>
+          <DisabledContainer disabled={!selectedRole}>
             <div className="row" style={{ marginTop: 10 }}>
               <div className="col-xs-8 col-sm-4">
                 <Button
@@ -145,7 +152,7 @@ export const Apply = () => {
                 />
               </div>
             </div>
-          </div>
+          </DisabledContainer>
         </div>
       </StyledSwipeableBottomSheet>
 

@@ -23,7 +23,7 @@ type Props = {
 };
 
 export const Form: FC<Props> = ({ solats, roleId, latlng, onSubmit }) => {
-  const { handleSubmit, control } = useForm<ApplicationRequest>({
+  const { handleSubmit, control, formState } = useForm<ApplicationRequest>({
     defaultValues: {
       location: [],
       comment: '',
@@ -34,16 +34,8 @@ export const Form: FC<Props> = ({ solats, roleId, latlng, onSubmit }) => {
     },
   });
 
-  // const [latlng, setLatlng] = useState<LatLng>({ lat: null, lng: null });
-
   return (
     <>
-      {/* <div style={{ width: '100%', height: 300, marginBottom: 20 }}>
-        <ApplicationMap onClick={setLatlng} />
-      </div>
-
-      <Divider /> */}
-
       <StyledForm
         onSubmit={handleSubmit((data) => {
           onSubmit({ ...data, location: [latlng.lng, latlng.lat] });
@@ -69,29 +61,6 @@ export const Form: FC<Props> = ({ solats, roleId, latlng, onSubmit }) => {
             />
           </FormControl>
         </div>
-
-        {/* <div>
-          <Controller
-            name="huruj_date"
-            rules={{ required: true }}
-            control={control}
-            render={({ field }) => {
-              return (
-                <TextField
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  fullWidth
-                  {...field}
-                  variant="outlined"
-                  label="Date"
-                  type="date"
-                  required
-                />
-              );
-            }}
-          />
-        </div> */}
 
         <div>
           <Controller
@@ -150,7 +119,7 @@ export const Form: FC<Props> = ({ solats, roleId, latlng, onSubmit }) => {
             disableElevation
             disableRipple
             type="submit"
-            disabled={!latlng}
+            disabled={!latlng || !roleId || !formState.isValid}
           >
             В Мечеть
           </Button>

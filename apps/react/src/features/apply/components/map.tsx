@@ -130,7 +130,7 @@ export const ApplicationMap: FC<Props> = ({ onClick, onClose }) => {
           zIndex: 2,
           background: '#fff',
           paddingTop: 10,
-          paddingBottom: 15,
+          paddingBottom: 20,
         }}
       >
         <Button
